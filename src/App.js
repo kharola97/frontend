@@ -4,6 +4,7 @@ import LoginSignupPage from './Components/SignUpAndLogin.js';
 const App = () => {
   return (
     <div>
+      
       <LoginSignupPage />
     </div>
   );

@@ -2,31 +2,39 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import "./LoginSignupPage.css"
 
+
+const success = function(){
+  alert("logged in succesfully")
+}
+
 const LoginForm = ({ setLogin }) => {
   const [email, setEmail] = useState(''); // state for email input
   const [password, setPassword] = useState(''); // state for password input
+  const [data, setData] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault(); // prevent default form submission behavior
     console.log('Email:', email);
     console.log('Password:', password);
+    if(!password) alert("please enter password")
     
     // make API call to backend server using axios
-    axios.post('localhost:3000/login', {
-      email,
-      password
+    axios.post('http://localhost:3000/login', {
+      email:email,
+      password:password
     })
     .then(response => {
-      console.log(response);
-      // TODO: handle successful response from backend server
+      setData(response.data);
+    
     })
     .catch(error => {
       console.log(error);
-      // TODO: handle error response from backend server
+      
     });
   }
 
   return (
+    <div>
     <form onSubmit={handleSubmit}>
       <label>
         Email:
@@ -36,9 +44,16 @@ const LoginForm = ({ setLogin }) => {
         Password:
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
-      <button type="submit">Login</button>
+      <button type="submit" onClick={success}>Login</button>
       <p>Don't have an account? <button onClick={() =>{ setLogin(false)}}>Signup</button></p>
     </form>
+    {Object.keys(data).length > 0 && (
+        <div>
+          <h2>API Response:</h2>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </div>
   );
 };
 
