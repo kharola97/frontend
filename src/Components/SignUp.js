@@ -2,6 +2,38 @@ import React, {useState} from 'react'
 import { NavLink,useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  isValidateEmail,
+  passwordVal,
+  isValidName,
+  isValidNo,
+  
+  
+} from "../Validations/Validations"
+
+const errorToast = (message) => {
+  toast.error(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
+const successToast = (message) => {
+  toast.success(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 function SignUp() {
   const navigate = useNavigate()
@@ -21,10 +53,29 @@ function SignUp() {
     
          e.preventDefault()
          const {Fullname,email,number,password,cpassword} = user;
-        //  if(!name|| !email || !number || !password || !cpassword){
-        //   alert("Enter all the details")
-        // return;}
-        console.log(user)
+         if(!Fullname|| !email || !number || !password || !cpassword){
+          errorToast("Enter all the details")
+        return;}
+        if(!isValidName(Fullname)){
+          errorToast("Name should only contain alphabets")
+          return
+        }
+        if(!isValidateEmail(email)){
+          errorToast("Incorrect email correct email format- username@domainname.com")
+          return
+        }
+        if(!isValidNo(number)){
+          errorToast("Incorrect phone number")
+          return
+        }
+        if(!passwordVal(password)){
+          errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12")
+          return
+        }
+        if(password!==cpassword){
+          errorToast("passwords are not matching")
+          return;
+        }
         const response =  await fetch("/register",{
           method:"POST",
           headers:{
@@ -37,27 +88,12 @@ function SignUp() {
         })
         console.log(JSON.stringify({Fullname,email,number,password,cpassword}))
         const res = await response.json()
-        if(res.status===400 || !res){
-          toast.error('login failed!', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+        if(res.status===false || !res){
+          let msg = res.message
+          errorToast(`login failed because ${msg}`);
         }
         else{
-          toast.success('Login was successfull!', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          successToast('Login was successfull!');
           navigate("/Login")
         }
   }
@@ -73,31 +109,31 @@ function SignUp() {
                       <label htmlFor='name'>
                         <i className='zmdi zmdi-account material-icons-name'></i>
                       </label>
-                      <input type='text' required name='Fullname' id='Fullname' autoComplete='off' placeholder='Your Name' value={user.name} onChange={handleInput}/>
+                      <input type='text' required name='Fullname' id='Fullname' placeholder='Your Name' value={user.name} onChange={handleInput}/>
                     </div>
                     <div className='form-group'>
                       <label htmlFor='email'>
                       <i className='zmdi zmdi-email  material-icons-name'></i>
                       </label>
-                      <input type='email'required  name='email' id='email' autoComplete='off' placeholder='Your Email' value={user.email} onChange={handleInput}/>
+                      <input type='email'required  name='email' id='email' placeholder='Your Email' value={user.email} onChange={handleInput}/>
                     </div>
                     <div className='form-group'>
                       <label htmlFor='phone'>
                       <i className='zmdi zmdi-phone-in-talk  material-icons-name'></i>
                       </label>
-                      <input type='tel' required name='number' id='number' autoComplete='off' placeholder='Your phone number' value={user.number} onChange={handleInput}/>
+                      <input type='tel' required name='number' id='number'  placeholder='Your phone number' value={user.number} onChange={handleInput}/>
                     </div> 
                     <div className='form-group'>
                       <label htmlFor='password'>
                       <i className='zmdi zmdi-lock  material-icons-name'></i>
                       </label>
-                      <input type='password' required name='password' id='password' autoComplete='off' placeholder='Enter Your password' value={user.password} onChange={handleInput}/>
+                      <input type='password' required name='password' id='password' placeholder='Enter Your password' value={user.password} onChange={handleInput}/>
                     </div>
                     <div className='form-group'>
                       <label htmlFor='cpassword'>
                       <i className='zmdi zmdi-lock  material-icons-name'></i>
                       </label>
-                      <input type='password'required  name='cpassword' id='cpassword' autoComplete='off' placeholder='Confirm Your password'value={user.cpassword} onChange={handleInput}/>
+                      <input type='password'required  name='cpassword' id='cpassword'  placeholder='Confirm Your password'value={user.cpassword} onChange={handleInput}/>
                     </div>
 
                     <div className='form-group form-button'>

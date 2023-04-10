@@ -1,0 +1,168 @@
+import React, { useState } from 'react'
+import "./Recipe.css"
+import {useNavigate} from 'react-router-dom'
+import { getCookie } from '../Cookie/Cookies';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import jwt_decode from 'jwt-decode';
+import { isValidRating,isValidInput} from "../Validations/Validations"
+
+// console.log("jwtoken")
+// const token = getCookie('jwtoken');
+// if(token){
+// console.log(token)
+// //decode the JWT
+// const decoded = jwt_decode(token);
+
+// //get the user ID from the decoded JWT
+// const userId = decoded.userId
+// }
+
+
+const errorToast = (message) => {
+    toast.error(message, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  
+  const successToast = (message) => {
+    toast.success(message, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+function Recipe() {
+    const navigate = useNavigate()
+    const [recipe,setRecipe] = useState({
+        dishname:"",description:"",ingredients:"",instructions:"",rating:"",cookingtime:""})
+
+    let name,value
+    const handleInput = (e)=>{
+        name = e.target.name
+        value=e.target.value
+        setRecipe({...recipe,[name]:value})
+    }
+
+    const postData = async  (e)=>{
+          e.preventDefault()
+         
+          const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
+
+          if(!dishname || !isValidInput(dishname)){
+            errorToast(`Please enter the dish name`)
+            return;
+          }
+          if(!description || !isValidInput(description)){
+            errorToast("Please add description of your dish")
+            return;
+          }
+          if(!ingredients || !isValidInput(ingredients)){
+            errorToast("Please add ingredients of your dish")
+            return;
+          }
+          if(!instructions || !isValidInput(instructions)){
+            errorToast("Please add instructions avout how to prepare your dish")
+            return;
+          }
+          if(!rating || !isValidRating(rating)){
+            errorToast("Rating can only be between 1-5")
+            return;
+          }
+          const token = getCookie('jwtoken');
+          if(token){
+          console.log(token)
+              //decode the JWT
+            const decoded = jwt_decode(token);
+
+                //get the user ID from the decoded JWT
+                  const userId = decoded.userId
+
+          const response = await fetch(`/recipe/ ${userId}`, {
+            method:"POSt",
+            headers:{
+                "Content-Type" : "application/json",
+
+                'x-auth-token': 'Token ' + token
+            },
+            body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime})
+          })
+        
+
+          const res = await response.json()
+          if(res.status===false || !res){
+            let msg = res.message
+            errorToast(`submission failed ${msg}`)
+            return;
+          }
+          else{
+            successToast("Recipe has been added")
+                   navigate("/ContactUs")
+          }
+    }
+  }
+  return (
+    <>
+    <div className='Recipe-div'>
+        <form method='POST' className='recipeform' id='recipeforn'>
+        <h2 className='heading'>Add Some New Recipe</h2>
+                    <div className='recipe-group'>
+                      <label htmlFor='dishname'>
+                        <i className='zmdi zmdi-account material-icons-name'></i>
+                      </label>
+                      <input type='text' required name='dishname' id='dishname' placeholder='Dish-name' value={recipe.dishname} onChange={handleInput}/>
+                    </div>
+                    <div className='recipe-group'>
+                      <label htmlFor='description'>
+                        <i className='zmdi zmdi-cutlery material-icons-name'></i>
+                      </label>
+                      <textarea required name='description' id='description' placeholder='Enter description here' value={recipe.description} onChange={handleInput}
+                       rows="8" cols="80"/> 
+                     </div>
+                    <div className='recipe-group'>
+                      <label htmlFor='ingredients'>
+                        <i className='zmdi zmdi-border-color material-icons-name'></i>
+                      </label>
+                      <textarea required name='ingredients' id='ingredients' placeholder='Enter ingredients here' value={recipe.ingredients} onChange={handleInput}
+                       rows="5" cols="50"/> 
+                    </div>
+                    <div className='recipe-group'>
+                      <label htmlFor='instructions'>
+                        <i className='zmdi zmdi-format-align-justify material-icons-name'></i>
+                      </label>
+                      <textarea required name='instructions' id='instructions' placeholder='Enter instructions here' value={recipe.instructions} onChange={handleInput}
+                       rows="9" cols="90"/> 
+                              </div>
+                    <div className='recipe-group'>
+                      <label htmlFor='rating'>
+                        <i className='zmdi zmdi-star material-icons-name'></i>
+                      </label>
+                      <input type='tel' required name='rating' id='rating' placeholder='rating' value={recipe.rating} onChange={handleInput}/>
+                    </div>
+                    
+                    <div className='recipe-group'>
+                      <label htmlFor='cookingtime'>
+                        <i className='zmdi zmdi-time-interval material-icons-name'></i>
+                      </label>
+                      <input type='tel' required name='cookingtime' id='cookingtime' placeholder='cookingtime' value={recipe.cookingtime} onChange={handleInput}/>
+                    </div>
+                    <div className='recipe-button'>
+                      <input type='submit' name='addrecipe' id='addrecipe' className='addrecipe' value="addrecipe" onClick={postData}/>
+                    </div>
+        </form>
+    </div>
+    </>
+  )
+}
+
+export default Recipe

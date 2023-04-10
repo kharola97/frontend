@@ -6,7 +6,7 @@ function Home() {
     <div className='home-page'>
       <div className='home-div'>
         <p  className='pt-10'>WELCOME</p>
-        <h2>This is a fullstack project</h2>
+        <h2>This is a Recipe project</h2>
       </div>
     </div>
         

@@ -3,12 +3,47 @@ import { NavLink ,useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Login() {
+
+
+const errorToast = (message) => {
+  toast.error(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
+const successToast = (message) => {
+  toast.success(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+function Login(props) {
   const navigate = useNavigate()
 const [email,setEmail] = useState()
 const [password, setPassword] = useState()
+
  const handleLogin = async (e)=>{
   e.preventDefault()
+
+  if(!email){
+    errorToast("Email is required")
+    return;
+  }
+  if(!password){
+    errorToast("Password is required")
+    return;
+  }
   
   const response = await fetch("/login", {
     method:"POST",
@@ -18,29 +53,19 @@ const [password, setPassword] = useState()
     body: JSON.stringify({email,password})
   })
   const res = await response.json()
-    if(res.status===400 || !res){
-      toast.error('login failed!', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+ 
+  //console.log(Cookies.get('jwtoken'), "after setting cookie twice")
+  
+    if(res.status===false || !res){
+      let msg = res.message
+      errorToast(`login failed because ${msg}`);
+      return;
     }
     else{
-      toast.success('Login was successfull!', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-         navigate("/ContactUs")
-    }
+      successToast('Login was successfull!');
+         navigate("/Profile")
+         props.setLoggedIn(true);
+        }
   
  }
   return (
