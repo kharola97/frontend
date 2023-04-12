@@ -1,0 +1,36 @@
+.Recipe {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+    
+  }
+  
+  .card {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.5rem;
+    height: 70vh;
+  }
+  
+  .label {
+    padding: 5px;
+    font-size: large;
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  .input {
+    font-size: 1.2em;
+    font-family: Arial, sans-serif;
+  }
+  .editbutton{
+   display: flex;
+  }
+  
+  
+
+
+  
+  

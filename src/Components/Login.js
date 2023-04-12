@@ -54,7 +54,6 @@ const [password, setPassword] = useState()
   })
   const res = await response.json()
  
-  //console.log(Cookies.get('jwtoken'), "after setting cookie twice")
   
     if(res.status===false || !res){
       let msg = res.message
@@ -63,7 +62,7 @@ const [password, setPassword] = useState()
     }
     else{
       successToast('Login was successfull!');
-         navigate("/Profile")
+         navigate("/")
          props.setLoggedIn(true);
         }
   
@@ -83,7 +82,7 @@ const [password, setPassword] = useState()
                       <label htmlFor='email'>
                       <i className='zmdi zmdi-email  material-icons-name'></i>
                       </label>
-                      <input type='email' name='email' id='email' autoComplete='off' placeholder='Your Email' value={email} 
+                      <input type='email' className='email' id='email' autoComplete='off' placeholder='Your Email' value={email} 
                       onChange={(e)=> setEmail(e.target.value)}/>
                     </div>
                    
@@ -91,13 +90,13 @@ const [password, setPassword] = useState()
                       <label htmlFor='password'>
                       <i className='zmdi zmdi-lock  material-icons-name'></i>
                       </label>
-                      <input type='password' name='password' id='password' autoComplete='off' placeholder='Enter Your password' value={password} 
+                      <input type='password' className='password' id='password' autoComplete='off' placeholder='Enter Your password' value={password} 
                       onChange={(e)=> setPassword(e.target.value)}/>
                     </div>
                    
 
                     <div className='form-group form-button'>
-                      <input type='submit' name='signin' id='signin' className='form-submit' value="Log In"
+                      <input type='submit'  id='signin' className='form-submit' value="Log In"
                       onClick={handleLogin}/>
                     </div>
 

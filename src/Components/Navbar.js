@@ -38,7 +38,12 @@ function Navbar(props) {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             {props.loggedIn ? (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                
+                <li style={{fontWeight:"bold"}} className="nav-item">
+                  <NavLink className="nav-link active" aria-current="page" to="MyRecipe">My-Recipes</NavLink>
+                </li>
+                  <li style={{fontWeight:"bold"}} className="nav-item">
+                  <NavLink className="nav-link active" aria-current="page" to="/">Home</NavLink>
+                </li>
                 <li style={{fontWeight:"bold"}} className="nav-item">
                   <NavLink className="nav-link active" aria-current="page" to="ViewRecipe">View-Recipes</NavLink>
                 </li>
@@ -54,9 +59,7 @@ function Navbar(props) {
               </ul>
             ) : (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link active" aria-current="page" to="/">Home</NavLink>
-                </li>
+                
                 <li style={{fontWeight:"bold"}} className="nav-item">
                   <NavLink className="nav-link" to="/Login">Login</NavLink>
                 </li>

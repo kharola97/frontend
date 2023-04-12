@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import "./Recipe.css"
 import {useNavigate} from 'react-router-dom'
 import { getCookie } from '../Cookie/Cookies';
+import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import jwt_decode from 'jwt-decode';
 import { isValidRating,isValidInput} from "../Validations/Validations"
 
 // console.log("jwtoken")
@@ -81,33 +81,34 @@ function Recipe() {
           }
           const token = getCookie('jwtoken');
           if(token){
-          console.log(token)
+          
               //decode the JWT
             const decoded = jwt_decode(token);
 
                 //get the user ID from the decoded JWT
                   const userId = decoded.userId
-
-          const response = await fetch(`/recipe/ ${userId}`, {
+               console.log(userId)
+          const response = await fetch(`/recipe/${userId}`, {
             method:"POSt",
             headers:{
                 "Content-Type" : "application/json",
 
-                'x-auth-token': 'Token ' + token
+                'cookie': 'Token ' + token
             },
             body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime})
           })
         
 
           const res = await response.json()
+          console.log(res,"hello")
           if(res.status===false || !res){
             let msg = res.message
-            errorToast(`submission failed ${msg}`)
+            errorToast(`submission failed beacsue ${msg}`)
             return;
           }
           else{
             successToast("Recipe has been added")
-                   navigate("/ContactUs")
+                   navigate("/")
           }
     }
   }
@@ -127,21 +128,21 @@ function Recipe() {
                         <i className='zmdi zmdi-cutlery material-icons-name'></i>
                       </label>
                       <textarea required name='description' id='description' placeholder='Enter description here' value={recipe.description} onChange={handleInput}
-                       rows="8" cols="80"/> 
+                       rows="5" cols="5"/> 
                      </div>
                     <div className='recipe-group'>
                       <label htmlFor='ingredients'>
                         <i className='zmdi zmdi-border-color material-icons-name'></i>
                       </label>
                       <textarea required name='ingredients' id='ingredients' placeholder='Enter ingredients here' value={recipe.ingredients} onChange={handleInput}
-                       rows="5" cols="50"/> 
+                       rows="5" cols="5"/> 
                     </div>
                     <div className='recipe-group'>
                       <label htmlFor='instructions'>
                         <i className='zmdi zmdi-format-align-justify material-icons-name'></i>
                       </label>
                       <textarea required name='instructions' id='instructions' placeholder='Enter instructions here' value={recipe.instructions} onChange={handleInput}
-                       rows="9" cols="90"/> 
+                       rows="5" cols="5"/> 
                               </div>
                     <div className='recipe-group'>
                       <label htmlFor='rating'>

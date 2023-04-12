@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './ViewRecipe.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jwt_decode from 'jwt-decode';
+import { getCookie } from '../Cookie/Cookies';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -27,15 +29,27 @@ const successToast = (message) => {
   });
 };
 
+
+
 function ViewRecipe() {
   const [recipes, setRecipes] = useState([]);
   const [dishName, setDishName] = useState('');
 const [ingredients, setIngredients] = useState('');
 const [rating, setRating] = useState('');
 const [cookingtime, setCookingTime] = useState('');
+const [comments, setComments] = useState([]);
 
   const getRecipeData = async () => {
-    let url = '/getrecipe';
+    
+    const token = getCookie('jwtoken');
+          if(token){
+             
+              //decode the JWT
+            const decoded = jwt_decode(token);
+
+                //get the user ID from the decoded JWT
+          const userId = decoded.userId
+    let url = `/getrecipe/${userId}`;
   const params = [];
 
   if (dishName) {
@@ -54,8 +68,16 @@ const [cookingtime, setCookingTime] = useState('');
   if (params.length) {
     url += `?${params.join('&')}`;
   }
-  console.log(url, "url")
-    const response = await fetch(url);
+        
+      const response = await fetch(url, {
+      method : "GET",
+      headers:{
+        "Content-Type" : "application/json",
+
+            'cookie': 'Token ' + token
+      }
+    });
+  
     const res = await response.json();
    
     if (res.status === false || !res) {
@@ -63,34 +85,71 @@ const [cookingtime, setCookingTime] = useState('');
       errorToast(`No recipe found ${msg}`);
       return;
     } else {
-      successToast('Here are the recipes');
+      
       setRecipes(res.data);
       return;
     }
   };
-
+  
+}
+const getComments = async (recipeId) => {
+  const token = getCookie('jwtoken');
+  if (token) {
+    const response = await fetch(`/getComment/${recipeId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: 'Token ' + token,
+      },
+    });
+    const res = await response.json();
+    if (res.status === false || !res) {
+      let msg = res.message;
+      errorToast(`user not found ${msg}`);
+      return;
+    } else {
+      let commentArray = res.data.comment;
+        
+      if (commentArray === undefined) {
+        setComments([]);
+        return;
+      } else {
+        setComments(commentArray);
+        return;
+      }
+    }
+  }
+};
+useEffect(() => {
+  recipes.forEach(recipe => {
+      getComments(recipe._id);
+  });
+}, [recipes]);
   useEffect(() => {
     getRecipeData();
+    return
   }, []);
   const handleSubmit = (event) => {
     event.preventDefault();
     getRecipeData();
+    successToast('Here are the recipes');
+    return
   };
 
   
   return (
     <div>
      <div className='search-container'>
-  <label for="dish-name"> Search by dish name<i  className="zmdi zmdi-search-for icon-with-space"></i></label>
+  <label htmlFor="dish-name"> Search by dish name<i  className="zmdi zmdi-search-for icon-with-space"></i></label>
   <input id="dish-name" type='text' placeholder='Search by dish name' value={dishName} onChange={(e) => setDishName(e.target.value)} />
   
-  <label for="ingredients">  Search by ingredients<i className="zmdi zmdi-format-list-numbered icon-with-space"></i> </label>
+  <label htmlFor="ingredients">  Search by ingredients<i className="zmdi zmdi-format-list-numbered icon-with-space"></i> </label>
   <input id="ingredients" type='text' placeholder='Search by ingredients' value={ingredients} onChange={(e) => setIngredients(e.target.value)}/>
   
   <label for="rating">Search by rating<i className="zmdi zmdi-star-half icon-with-space"></i> </label>
   <input id="rating" type='text' placeholder='Search by rating' value={rating} onChange={(e) => setRating(e.target.value)} />
   
-  <label for="cooking-time">Cooking Time<i  className="zmdi zmdi-time icon-with-space"></i> </label>
+  <label htmlFor="cooking-time">Cooking Time<i  className="zmdi zmdi-time icon-with-space"></i> </label>
   <select id="cooking-time" value={cookingtime} onChange={(e) => setCookingTime(e.target.value)}>
     <option value=''>Cooking Time</option>
     <option value='5'>Less than 5</option>
@@ -99,30 +158,42 @@ const [cookingtime, setCookingTime] = useState('');
     <option value='16'>More than 15</option>
   </select>
   
-  <button type='submit' onClick={handleSubmit}><i class="fa fa-search"></i> Search</button>
+  <button type='submit' onClick={handleSubmit}> Search </button>
 </div>
       <div className='Recipe'>
         {recipes.map((recipe) => {
           return (
-            <div className='card' key={recipe._id} style={{ marginTop: '2rem' }}>
-              <h2 className='label'>Dish name:</h2>
-              <p>{recipe.dishname}</p>
-              <h2 className='label'>Ingredients:</h2>
-              <p>{recipe.ingredients.join(',')}</p>
-              <h2 className='label'>Rating:</h2>
-              <p>{recipe.rating}</p>
-              <h2 className='label'>Cooking Time:</h2>
-              <p>{recipe.cookingtime}</p>
-              <h2 className='label'>Description:</h2>
-              <p>{recipe.description}</p>
-              <h2 className='label'>Instructions:</h2>
-              <p>{recipe.instructions}</p>
+            <div className='card' key={recipe._id}>
+            <div className='label'>Dish name:</div>
+            <div className='input' >{recipe.dishname}</div>
+            <div className='label'>Ingredients:</div>
+            <div className='input' >{recipe.ingredients.join(',')}</div>
+            <div className='label'>Rating:</div>
+            <div className='input' >{recipe.rating}</div>
+            <div className='label'>Cooking Time:</div>
+            <div className='input' >{recipe.cookingtime} Minutes</div>
+            <div className='label'>Description:</div>
+            <div className='input' >{recipe.description}</div>
+            <div className='label'>Instructions:</div>
+            <div className='input' >{recipe.instructions}</div>
+            <div className='label'>Comments</div>
+            {comments.length===0 ? (
+                <div className='input'>No comments yet</div>
+                 ) : (
+                  comments.map((comment,index) => (
+                    <div key={recipe._id}>
+                       <div className='input' >{comment}</div>
+                      </div>
+                      ))
+                  )}
             </div>
+
           );
         })}
       </div>
+      
     </div>
   );
 }
 
-export default ViewRecipe;
+export default ViewRecipe

@@ -13,12 +13,13 @@
 .recipeform {
     display: flex;
     flex-direction: column;
-    width: 120%;
-    max-width: 900px;
+    width: 80%;
+    max-width: 600px;
     background-color: #ffffff;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+    
 }
 
 .recipeform input[type="text"],
@@ -34,7 +35,7 @@
 .recipe-button {
     margin-top: 20px;
   font-size: 1.2rem;
-   padding-left: 300px;
+   padding-left: 200px;
 }
 
 .recipe-group label {
@@ -64,114 +65,8 @@
    background-color: rgb(198, 224, 205);
    transform: scale(1.1);
 }
+.recipeform textarea{
+  height: 10vh;
+}
 
 
-/*CSS for recipeList and recipeItem*/
-/* .recipe-list-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  
-  .recipe-list-filters {
-    width: 25%;
-    padding: 1rem;
-    border-right: 1px solid #ccc;
-  }
-  
-  .recipe-list-results {
-    width: 70%;
-    padding: 1rem;
-  }
-  
-  .recipe-list-header {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-list-filter-input {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    width: 100%;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .recipe-list-filter-label {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .recipe-list-filter-button {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 1rem;
-  }
-
-  .recipe-item-container {
-    border: 1px solid #ccc;
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-header {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-description {
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-rating {
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-time {
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-ingredients {
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-instructions {
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-comments {
-    margin-top: 1rem;
-  }
-  
-  .recipe-item-comment-header {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-comment-container {
-    border: 1px solid #ccc;
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-item-comment-author {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .recipe-item-comment-text {
-    margin-bottom: 0.5rem;
-  }
-  
-  .recipe-item-comment-date {
-    font-size: 0.8rem;
-    color: #777;
-  }
-  
-   */
