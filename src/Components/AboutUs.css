@@ -1,0 +1,74 @@
+
+      
+      /* .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        padding: 50px;
+       text-align: center;
+        
+      }
+
+      .about-us h2,
+      .about-us p {
+        width: 800px;
+        margin: 0 auto;
+        font-size: 18px;
+        line-height: 1.5;
+      }
+      
+      .about-us h2 {
+        font-size: 30px;
+        margin-bottom: 30px;
+      }
+      */
+      .about-us {
+        padding-top: 50px;
+        background-image: url("../Images/ella-olsson-oPBjWBCcAEo-unsplash.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        position: relative;
+      }
+      
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      
+      .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        padding: 50px;
+        text-align: center;
+      }
+      
+      .about-us h2,
+      .about-us p {
+        width: 800px;
+        margin: 0 auto;
+        font-size: 20px;
+        line-height: 1.5;
+      }
+      
+      .about-us h2 {
+        font-style: oblique;
+        font-size: 30px;
+        margin-bottom: 30px;
+      }
+      

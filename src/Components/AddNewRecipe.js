@@ -7,16 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isValidRating,isValidInput} from "../Validations/Validations"
 
-// console.log("jwtoken")
-// const token = getCookie('jwtoken');
-// if(token){
-// console.log(token)
-// //decode the JWT
-// const decoded = jwt_decode(token);
 
-// //get the user ID from the decoded JWT
-// const userId = decoded.userId
-// }
 
 
 const errorToast = (message) => {
@@ -119,7 +110,7 @@ function Recipe() {
         <h2 className='heading'>Add Some New Recipe</h2>
                     <div className='recipe-group'>
                       <label htmlFor='dishname'>
-                        <i className='zmdi zmdi-account material-icons-name'></i>
+                        <i className='fas fa-pizza-slice'></i>
                       </label>
                       <input type='text' required name='dishname' id='dishname' placeholder='Dish-name' value={recipe.dishname} onChange={handleInput}/>
                     </div>
@@ -148,17 +139,17 @@ function Recipe() {
                       <label htmlFor='rating'>
                         <i className='zmdi zmdi-star material-icons-name'></i>
                       </label>
-                      <input type='tel' required name='rating' id='rating' placeholder='rating' value={recipe.rating} onChange={handleInput}/>
+                      <input type='tel' required name='rating' id='rating' placeholder='Rating' value={recipe.rating} onChange={handleInput}/>
                     </div>
                     
                     <div className='recipe-group'>
                       <label htmlFor='cookingtime'>
                         <i className='zmdi zmdi-time-interval material-icons-name'></i>
                       </label>
-                      <input type='tel' required name='cookingtime' id='cookingtime' placeholder='cookingtime' value={recipe.cookingtime} onChange={handleInput}/>
+                      <input type='tel' required name='cookingtime' id='cookingtime' placeholder='Cooking time in minutes' value={recipe.cookingtime} onChange={handleInput}/>
                     </div>
                     <div className='recipe-button'>
-                      <input type='submit' name='addrecipe' id='addrecipe' className='addrecipe' value="addrecipe" onClick={postData}/>
+                      <input type='submit' name='addrecipe' id='addrecipe' className='addrecipe' value="Submit" onClick={postData}/>
                     </div>
         </form>
     </div>

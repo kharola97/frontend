@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import recipe from "../Images/recipe5.png";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "./Navbar.css"
 
 const successToast = (message) => {
   toast.success(message, {
@@ -38,36 +39,36 @@ function Navbar(props) {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             {props.loggedIn ? (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li style={{fontWeight:"bold"}} className="nav-item">
+                <li  className="nav-item">
                   <NavLink className="nav-link active" aria-current="page" to="MyRecipe">My-Recipes</NavLink>
                 </li>
-                  <li style={{fontWeight:"bold"}} className="nav-item">
+                  <li  className="nav-item">
                   <NavLink className="nav-link active" aria-current="page" to="/">Home</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
+                <li  className="nav-item">
                   <NavLink className="nav-link active" aria-current="page" to="ViewRecipe">View-Recipes</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" to="/Profile">Profile</NavLink>
+                <li  className="nav-item">
+                  <NavLink className="nav-link active" to="/Profile">Profile</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" to="/AddNewRecipe">Add a New recipe</NavLink>
+                <li  className="nav-item">
+                  <NavLink className="nav-link active" to="/AddNewRecipe">Add a New recipe</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" onClick={handleLogout}>Logout</NavLink>
+                <li  className="nav-item">
+                  <NavLink className="nav-link active" onClick={handleLogout}>Logout</NavLink>
                 </li>
               </ul>
             ) : (
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                 
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" to="/Login">Login</NavLink>
+                <li  className="nav-item">
+                  <NavLink className="nav-link active" to="/Login">Login</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" to="/ContactUs">Contact us</NavLink>
+                <li  className="nav-item">
+                  <NavLink className="nav-link active" to="/AbouttUs">About us</NavLink>
                 </li>
-                <li style={{fontWeight:"bold"}} className="nav-item">
-                  <NavLink className="nav-link" to="/SignUp">Register</NavLink>
+                <li className="nav-item">
+                  <NavLink className="nav-link active" to="/SignUp">Register</NavLink>
                 </li>
               </ul>
             )}

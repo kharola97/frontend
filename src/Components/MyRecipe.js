@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import jwt_decode from 'jwt-decode';
 import { getCookie } from '../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Myrecipe.css';
+
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -32,7 +34,7 @@ const successToast = (message) => {
 function MyRecipe() {
   const [recipes, setRecipes] = useState([]);
   const [comments, setComments] = useState([]);
-
+  const navigate = useNavigate()
   const getMyRecipe = async () => {
     const token = getCookie('jwtoken');
     if (token) {
@@ -62,6 +64,9 @@ function MyRecipe() {
   
 
 const getComments = async (recipeId) => {
+  try {
+    
+ 
     const token = getCookie('jwtoken');
     if (token) {
       const response = await fetch(`/getComment/${recipeId}`, {
@@ -77,17 +82,19 @@ const getComments = async (recipeId) => {
         errorToast(`user not found ${msg}`);
         return;
       } else {
-        let commentArray = res.data.comment;
-          
-        if (commentArray === undefined) {
+    
+        if (res.data === undefined) {
           setComments([]);
           return;
         } else {
-          setComments(commentArray);
+          setComments(res.data.comment);
           return;
         }
       }
     }
+  } catch (error) {
+        return ({status:false,message:error.message})
+  }
   };
   useEffect(() => {
     recipes.forEach(recipe => {
@@ -99,7 +106,11 @@ const getComments = async (recipeId) => {
     getMyRecipe();
   }, []);
 
-  const handleEdit = async (recipeId) => {};
+  const handleEdit = async (recipeId) => {
+    
+    navigate(`/EditRecipe/${recipeId}`)
+   
+  };
 
   return (
     <div>
@@ -120,7 +131,9 @@ const getComments = async (recipeId) => {
               <div className='label'>Instructions:</div>
               <div className='input'>{recipe.instructions}</div>
               <div className='label'>Comments</div>
-              {comments.length===0 ? (
+              
+              {comments===undefined ? (
+                
                 <div className='input'>No comments yet</div>
                  ) : (
                   comments.map((comment,index) => (
@@ -130,10 +143,9 @@ const getComments = async (recipeId) => {
                           ))
                             )}
                             <br></br>
+                        
               <div className='editbutton' style={{ textAlign: 'right' }}>
-                <button className='label' onClick={() => handleEdit(recipe._id)}>
-                  Edit
-                </button>
+              <button onClick={() => handleEdit(recipe._id)}>Edit Recipe</button>
               </div>
             </div>
           );

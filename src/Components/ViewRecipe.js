@@ -38,6 +38,8 @@ const [ingredients, setIngredients] = useState('');
 const [rating, setRating] = useState('');
 const [cookingtime, setCookingTime] = useState('');
 const [comments, setComments] = useState([]);
+const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+
 
   const getRecipeData = async () => {
     
@@ -93,6 +95,7 @@ const [comments, setComments] = useState([]);
   
 }
 const getComments = async (recipeId) => {
+  console.log(recipeId)
   const token = getCookie('jwtoken');
   if (token) {
     const response = await fetch(`/getComment/${recipeId}`, {
@@ -104,8 +107,9 @@ const getComments = async (recipeId) => {
     });
     const res = await response.json();
     if (res.status === false || !res) {
-      let msg = res.message;
-      errorToast(`user not found ${msg}`);
+      // let msg = res.message;
+      // errorToast(`user not found ${msg}`);
+      setComments([]);
       return;
     } else {
       let commentArray = res.data.comment;
@@ -124,8 +128,10 @@ useEffect(() => {
   recipes.forEach(recipe => {
       getComments(recipe._id);
   });
-}, [recipes]);
+},  [recipes, selectedRecipeId]);
+
   useEffect(() => {
+    
     getRecipeData();
     return
   }, []);
@@ -177,11 +183,12 @@ useEffect(() => {
             <div className='label'>Instructions:</div>
             <div className='input' >{recipe.instructions}</div>
             <div className='label'>Comments</div>
-            {comments.length===0 ? (
+            {comments===undefined ? (
                 <div className='input'>No comments yet</div>
                  ) : (
+                 
                   comments.map((comment,index) => (
-                    <div key={recipe._id}>
+                    <div key={index}>
                        <div className='input' >{comment}</div>
                       </div>
                       ))
