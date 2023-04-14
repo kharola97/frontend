@@ -14,6 +14,7 @@ import Profile from './Components/Profile';
 import ViewRecipe from "./Components/ViewRecipe"
 import MyRecipe from './Components/MyRecipe';
 import EditRecipe from './Components/EditRecipe';
+import RecipeComments from './Components/RecipeComments';
 
 function RedirectToLogin({ loggedIn, children }) {
   const navigate = useNavigate()
@@ -46,6 +47,7 @@ function App() {
         <Route path="/ViewRecipe" element={<RedirectToLogin loggedIn={loggedIn}><ViewRecipe/></RedirectToLogin>} />
         <Route path="/MyRecipe" element={<RedirectToLogin loggedIn={loggedIn}><MyRecipe/></RedirectToLogin>} />
         <Route path="/EditRecipe/:recipeId" element={<EditRecipe />} />
+        <Route path="/RecipeComments/:recipeId" element={<RecipeComments />} />
         </Routes>
       </div>
     </Router>

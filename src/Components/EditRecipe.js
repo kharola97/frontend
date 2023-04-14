@@ -33,6 +33,7 @@ const successToast = (message) => {
 function EditRecipe() {
   const { recipeId } = useParams();
   const navigate = useNavigate()
+  const [isPublic, setIsPublic] = useState(true);
   const [editedRecipe, setEditedRecipe] = useState({
     dishname: '',
     description: '',
@@ -41,39 +42,45 @@ function EditRecipe() {
     cookingtime: ''
   });
 
+const handleDelete = async()=>{
 
-// const getrecipe = async()=>{
-//   const token = getCookie('jwtoken');
-//   if (token) {
-//     console.log(recipeId)
-//     const response = await fetch(`/recipeById/${recipeId}`, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         "cookie": 'Token ' + token,
-//       },
-//     });
-//     const res = await response.json();
+  try {
+    const token = getCookie('jwtoken');
+  if(token){
+    //decode the JWT
+    const decoded = jwt_decode(token)
+    const userId = decoded.userId
+    const response = await fetch(`/deleteRecipe/${recipeId}/${userId}`,{
+      method:"DELETE",
+      headers:{
+        'Content-Type': 'application/json',
+        "cookie": 'Token ' + token,
+      }
+    })
     
-//     if(res.status===false,!res){
-//       let msg = res.message
-//       errorToast(`${msg}`)
-//     }
-//     else{
-//       setEditedRecipe({
-//         dishname: res.dishname,
-//         description: res.description,
-//         ingredients: res.ingredients,
-//         instructions: res.instructions,
-//         cookingtime: res.cookingtime
-//       });
-//     }
-    
-//   }
+    const res = await response.json();
+    if (res.status === false || !res) {
+      // let msg = res.message;
+      // errorToast(`user ${msg}`);
+      return;
+    } else {
+      successToast("Recipe deleted successfully")
+      navigate('/')
+      return;
+    }
+  }
+} catch (error) {
+      throw error
+}
+}
 
-// }
+
+
+
+
 const getRecipe = async () => {
-  const token = getCookie('jwtoken');
+  try {
+    const token = getCookie('jwtoken');
   if (token) {
     //decode the JWT
     //const decoded = jwt_decode(token);
@@ -90,19 +97,28 @@ const getRecipe = async () => {
     const res = await response.json();
     if (res.status === false || !res) {
       let msg = res.message;
-      errorToast(`user not found ${msg}`);
+      errorToast(`user went ${msg}`);
       return;
     } else {
       setEditedRecipe(res.data);
+      setIsPublic(res.data.isPublic)
       return;
     }
   }
+} catch (error) {
+     throw error
+}
 };
 
  useEffect(()=>{
  
   getRecipe();
  },[])
+ const handleToggle = (event)=>{
+
+   setIsPublic(event.target.value === "public");
+ }
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -110,31 +126,36 @@ const getRecipe = async () => {
   };
 
   const handleSubmit = async (event) => {
+   try {
     event.preventDefault();
     const token = getCookie('jwtoken');
     if(token){
       const decoded = jwt_decode(token)
       const userId = decoded.userId
+      console.log(isPublic)
     // Send the edited recipe details to the server for saving
     let response = await fetch(`/updateRecipe/${userId}/${recipeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(editedRecipe)
+      body: JSON.stringify({...editedRecipe,isPublic})
     })
 
-    const res = response.json()
+    const res = await response.json()
     console.log(res,"update")
     if(res.status===false||!res){
-      let msg = res.message
-      errorToast(`${msg}`)
+      // let msg = res.message
+      // errorToast(`${msg}`)
     }
     else{
       setEditedRecipe(res.data)
       navigate('/MyRecipe')
     }
   }
+} catch (error) {
+    throw error
+}
   };
 
   return (
@@ -183,7 +204,22 @@ const getRecipe = async () => {
             onChange={handleInputChange}
           />
         </div>
-        <button type='submit'>Save</button>
+        
+  <div className='recipeprivacy' >
+  <label>Recipe privacy:</label>
+    <label>
+      <input type="radio" value="private" name="options" checked={!isPublic} onChange={handleToggle} />
+      Private
+    </label>
+    <label>
+      <input type="radio" value="public" name='options' checked={isPublic} onChange={handleToggle} />
+      Public
+    </label>
+  </div>
+
+        
+        <button className='save' type='submit'>Save</button>
+        <button onClick={()=>handleDelete()} className='delete' type='button'>Delete</button>
       </form>
     </div>
   );

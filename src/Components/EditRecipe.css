@@ -34,8 +34,24 @@
     border-radius: 5px;
     font-size: 16px;
   }
+  .save{
+    border: none;
+    border-radius: 5px;
+  }
+  .delete{
+    border: none;
+    border-radius: 5px;
+    margin-left: 170px;
+    background-color: rgb(205, 59, 59);
+  }
   
-  .form button {
+
+  .recipeprivacy{
+    display: flex;
+     flex-direction: row;
+     margin-top: 10px;
+  }
+  /* .form button {
     
     
     background-color: #4caf50;
@@ -51,5 +67,5 @@
   
   .form button:hover {
     background-color: #3e8e41;
-  }
+  } */
   

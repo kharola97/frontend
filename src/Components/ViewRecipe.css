@@ -1,9 +1,7 @@
 body {
     background-color: rgb(214, 250, 238);
 }
-/* .navbar {
-    backgroundColor:rgb(157, 239, 239);
-} */
+
 .search-container {
     display: flex;
     flex-wrap: nowrap;
@@ -42,11 +40,11 @@ body {
   }
   
   .card {
-    padding: 20px;
+    padding: 30px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 0.5rem;
-    height: 50vh;
+    height: 80vh;
   }
   
   .label {

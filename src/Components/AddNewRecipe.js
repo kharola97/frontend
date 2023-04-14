@@ -35,8 +35,15 @@ const errorToast = (message) => {
   };
 function Recipe() {
     const navigate = useNavigate()
+    const [isPublic, setIsPublic] = useState(true);
     const [recipe,setRecipe] = useState({
         dishname:"",description:"",ingredients:"",instructions:"",rating:"",cookingtime:""})
+
+        
+        const handleRadioChange = (e) => {
+          setIsPublic(e.target.value === "public");
+        };
+      
 
     let name,value
     const handleInput = (e)=>{
@@ -47,7 +54,7 @@ function Recipe() {
 
     const postData = async  (e)=>{
           e.preventDefault()
-         
+          console.log(isPublic)
           const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
 
           if(!dishname || !isValidInput(dishname)){
@@ -66,7 +73,7 @@ function Recipe() {
             errorToast("Please add instructions avout how to prepare your dish")
             return;
           }
-          if(!rating || !isValidRating(rating)){
+          if(!rating || !isValidRating(rating.trim())){
             errorToast("Rating can only be between 1-5")
             return;
           }
@@ -78,7 +85,7 @@ function Recipe() {
 
                 //get the user ID from the decoded JWT
                   const userId = decoded.userId
-               console.log(userId)
+               
           const response = await fetch(`/recipe/${userId}`, {
             method:"POSt",
             headers:{
@@ -86,7 +93,7 @@ function Recipe() {
 
                 'cookie': 'Token ' + token
             },
-            body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime})
+            body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime,isPublic})
           })
         
 
@@ -148,6 +155,15 @@ function Recipe() {
                       </label>
                       <input type='tel' required name='cookingtime' id='cookingtime' placeholder='Cooking time in minutes' value={recipe.cookingtime} onChange={handleInput}/>
                     </div>
+                   <div className='recipe-group'>
+                   <div>
+                    <label>Recipe privacy</label>
+               <label> 
+                <input type="radio" value="private" name="options" checked={!isPublic} onChange={handleRadioChange}/>Private</label>
+               <label> 
+                    <input type="radio" value="public" name='options' checked={isPublic} onChange={handleRadioChange}/>Public</label>
+                </div>
+                   </div>
                     <div className='recipe-button'>
                       <input type='submit' name='addrecipe' id='addrecipe' className='addrecipe' value="Submit" onClick={postData}/>
                     </div>
@@ -157,4 +173,4 @@ function Recipe() {
   )
 }
 
-export default Recipe
+export default Recipe 

@@ -33,10 +33,15 @@ const successToast = (message) => {
 
 function MyRecipe() {
   const [recipes, setRecipes] = useState([]);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState({});
   const navigate = useNavigate()
+
+
+
   const getMyRecipe = async () => {
-    const token = getCookie('jwtoken');
+
+    try {
+      const token = getCookie('jwtoken');
     if (token) {
       //decode the JWT
       const decoded = jwt_decode(token);
@@ -51,22 +56,25 @@ function MyRecipe() {
         },
       });
       const res = await response.json();
+      console.log(res)
       if (res.status === false || !res) {
         let msg = res.message;
-        errorToast(`user not found ${msg}`);
+        errorToast(`error  ${msg}`);
         return;
       } else {
         setRecipes(res.data);
         return;
       }
     }
+  } catch (error) {
+      throw error
+  }
   };
   
 
+
 const getComments = async (recipeId) => {
   try {
-    
- 
     const token = getCookie('jwtoken');
     if (token) {
       const response = await fetch(`/getComment/${recipeId}`, {
@@ -78,24 +86,33 @@ const getComments = async (recipeId) => {
       });
       const res = await response.json();
       if (res.status === false || !res) {
-        let msg = res.message;
-        errorToast(`user not found ${msg}`);
+        // let msg = res.message;
+        // errorToast(`user ${msg}`);
         return;
       } else {
-    
         if (res.data === undefined) {
-          setComments([]);
+          setComments((prevComments) => ({
+            ...prevComments,
+            [recipeId]: [],
+          }));
           return;
         } else {
-          setComments(res.data.comment);
+          setComments((prevComments) => ({
+            ...prevComments,
+            [recipeId]: res.data.comment,
+          }));
           return;
         }
       }
     }
   } catch (error) {
-        return ({status:false,message:error.message})
+    return { status: false, message: error.message };
   }
-  };
+};
+
+
+
+
   useEffect(() => {
     recipes.forEach(recipe => {
         getComments(recipe._id);
@@ -130,19 +147,17 @@ const getComments = async (recipeId) => {
               <div className='input'>{recipe.description}</div>
               <div className='label'>Instructions:</div>
               <div className='input'>{recipe.instructions}</div>
+              <div className='label'>isPublic</div>
+              <div className='input'>{recipe.isPublic.toString()}</div>
               <div className='label'>Comments</div>
+              {comments[recipe._id] === undefined ? (
+               <div className='input'>No comments yet</div>
+           ) : (comments[recipe._id].map((comment, index) => (
+                 <div key={index}>
+                     <div className='input'>{comment}</div>
+                        </div>)))}
               
-              {comments===undefined ? (
-                
-                <div className='input'>No comments yet</div>
-                 ) : (
-                  comments.map((comment,index) => (
-                    <div key={index}>
-                       <div className='input' >{comment}</div>
-                          </div>
-                          ))
-                            )}
-                            <br></br>
+                           
                         
               <div className='editbutton' style={{ textAlign: 'right' }}>
               <button onClick={() => handleEdit(recipe._id)}>Edit Recipe</button>

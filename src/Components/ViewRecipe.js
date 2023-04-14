@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from 'jwt-decode';
 import { getCookie } from '../Cookie/Cookies';
+import { useNavigate } from "react-router-dom";
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -37,8 +38,10 @@ function ViewRecipe() {
 const [ingredients, setIngredients] = useState('');
 const [rating, setRating] = useState('');
 const [cookingtime, setCookingTime] = useState('');
-const [comments, setComments] = useState([]);
-const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+
+const navigate = useNavigate()
+// const [comments, setComments] = useState([]);
+// const [selectedRecipeId, setSelectedRecipeId] = useState(null);
 
 
   const getRecipeData = async () => {
@@ -94,41 +97,44 @@ const [selectedRecipeId, setSelectedRecipeId] = useState(null);
   };
   
 }
-const getComments = async (recipeId) => {
-  console.log(recipeId)
-  const token = getCookie('jwtoken');
-  if (token) {
-    const response = await fetch(`/getComment/${recipeId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        cookie: 'Token ' + token,
-      },
-    });
-    const res = await response.json();
-    if (res.status === false || !res) {
-      // let msg = res.message;
-      // errorToast(`user not found ${msg}`);
-      setComments([]);
-      return;
-    } else {
-      let commentArray = res.data.comment;
+// const getComments = async (recipeId) => {
+//   console.log(recipeId)
+//   const token = getCookie('jwtoken');
+//   if (token) {
+//     const response = await fetch(`/getComment/${recipeId}`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         cookie: 'Token ' + token,
+//       },
+//     });
+//     const res = await response.json();
+//     if (res.status === false || !res) {
+//       // let msg = res.message;
+//       // errorToast(`user not found ${msg}`);
+//       setComments([]);
+//       return;
+//     } else {
+//       let commentArray = res.data.comment;
         
-      if (commentArray === undefined) {
-        setComments([]);
-        return;
-      } else {
-        setComments(commentArray);
-        return;
-      }
-    }
-  }
-};
-useEffect(() => {
-  recipes.forEach(recipe => {
-      getComments(recipe._id);
-  });
-},  [recipes, selectedRecipeId]);
+//       if (commentArray === undefined) {
+//         setComments([]);
+//         return;
+//       } else {
+//         setComments(commentArray);
+//         return;
+//       }
+//     }
+//   }
+// };
+// useEffect(() => {
+//   recipes.forEach(recipe => {
+//       getComments(recipe._id);
+//   });
+// },  []);
+const handleComment = async (recipeId)=>{
+      navigate(`/RecipeComments/${recipeId}`)
+}
 
   useEffect(() => {
     
@@ -152,7 +158,7 @@ useEffect(() => {
   <label htmlFor="ingredients">  Search by ingredients<i className="zmdi zmdi-format-list-numbered icon-with-space"></i> </label>
   <input id="ingredients" type='text' placeholder='Search by ingredients' value={ingredients} onChange={(e) => setIngredients(e.target.value)}/>
   
-  <label for="rating">Search by rating<i className="zmdi zmdi-star-half icon-with-space"></i> </label>
+  <label htmlFor="rating">Search by rating<i className="zmdi zmdi-star-half icon-with-space"></i> </label>
   <input id="rating" type='text' placeholder='Search by rating' value={rating} onChange={(e) => setRating(e.target.value)} />
   
   <label htmlFor="cooking-time">Cooking Time<i  className="zmdi zmdi-time icon-with-space"></i> </label>
@@ -183,17 +189,8 @@ useEffect(() => {
             <div className='label'>Instructions:</div>
             <div className='input' >{recipe.instructions}</div>
             <div className='label'>Comments</div>
-            {comments===undefined ? (
-                <div className='input'>No comments yet</div>
-                 ) : (
-                 
-                  comments.map((comment,index) => (
-                    <div key={index}>
-                       <div className='input' >{comment}</div>
-                      </div>
-                      ))
-                  )}
-            </div>
+            <button onClick={() => handleComment(recipe._id)}>See comments</button>
+             </div>
 
           );
         })}

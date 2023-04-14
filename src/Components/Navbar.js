@@ -3,6 +3,7 @@ import recipe from "../Images/recipe5.png";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Navbar.css"
+import Cookies from 'js-cookie';
 
 const successToast = (message) => {
   toast.success(message, {
@@ -22,6 +23,7 @@ function Navbar(props) {
 
   function handleLogout() {
     props.setLoggedIn(false);
+    Cookies.remove('jwtoken');
     successToast("You have been logged Out ")
     navigate('/SignUp')
   }
