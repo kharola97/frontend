@@ -52,7 +52,7 @@ const getRecipeData = async () => {
 
     //get the user ID from the decoded JWT
     const userId = decoded.userId
-    let url = `${API_URL}/getrecipe/${userId}`;
+    let url = `${API_URL}/http://localhost:4500/getrecipe/${userId}`;
   const params = [];
 
   if (dishName) {

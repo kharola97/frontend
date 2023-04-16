@@ -86,7 +86,7 @@ function Recipe() {
                 //get the user ID from the decoded JWT
                   const userId = decoded.userId
                
-          const response = await fetch(`${API_URL}/recipe/${userId}`, {
+          const response = await fetch(`${API_URL}/http://localhost:4500/recipe/${userId}`, {
             method:"POSt",
             headers:{
                 "Content-Type" : "application/json",

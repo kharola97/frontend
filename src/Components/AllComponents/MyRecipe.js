@@ -49,7 +49,7 @@ function MyRecipe() {
 
       //get the user ID from the decoded JWT
       const userId = decoded.userId;
-      const response = await fetch(`${API_URL}/getRecipeByUser/${userId}`, {
+      const response = await fetch(`${API_URL}/http://localhost:4500/getRecipeByUser/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const getComments = async (recipeId) => {
   try {
     const token = getCookie('jwtoken');
     if (token) {
-      const response = await fetch(`${API_URL}/getComment/${recipeId}`, {
+      const response = await fetch(`${API_URL}/http://localhost:4500/getComment/${recipeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

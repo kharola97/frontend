@@ -51,7 +51,7 @@ const handleDelete = async()=>{
     //decode the JWT
     const decoded = jwt_decode(token)
     const userId = decoded.userId
-    const response = await fetch(`${API_URL}/deleteRecipe/${recipeId}/${userId}`,{
+    const response = await fetch(`${API_URL}/http://localhost:4500/deleteRecipe/${recipeId}/${userId}`,{
       method:"DELETE",
       headers:{
         'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const getRecipe = async () => {
     const token = getCookie('jwtoken');
   if (token) {
     
-    const response = await fetch(`${API_URL}/recipeById/${recipeId}`, {
+    const response = await fetch(`${API_URL}/http://localhost:4500/recipeById/${recipeId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const getRecipe = async () => {
       const userId = decoded.userId
       console.log(isPublic)
     // Send the edited recipe details to the server for saving
-    let response = await fetch(`${API_URL}/updateRecipe/${userId}/${recipeId}`, {
+    let response = await fetch(`${API_URL}/http://localhost:4500/updateRecipe/${userId}/${recipeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

@@ -85,7 +85,7 @@ function SignUp() {
       return;
     }
   
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`${API_URL}/http://localhost:4500/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
