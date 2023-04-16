@@ -140,7 +140,7 @@ const getRecipe = async () => {
     })
 
     const res = await response.json()
-    console.log(res,"update")
+    
     if(res.status===false||!res){
       let msg = res.message
       errorToast(`${msg}`)
