@@ -1,8 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useParams,useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
-import { getCookie } from '../Cookie/Cookies';
-import "./RecipeComments.css"
+import { getCookie } from '../../Cookie/Cookies';
+import "../AllCss/RecipeComments.css"
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import API_URL from '../../Config/Api-Url';
+
+const errorToast = (message) => {
+  toast.error(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
+const successToast = (message) => {
+  toast.success(message, {
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
 
 function RecipeComments() {
   const { recipeId } = useParams();
@@ -17,7 +45,7 @@ function RecipeComments() {
 const getRecipeById = async (recipeId) => {
     const token = getCookie('jwtoken');
     if (token) {
-      const response = await fetch(`/recipeById/${recipeId}`, {
+      const response = await fetch(`${API_URL}/recipeById/${recipeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +55,7 @@ const getRecipeById = async (recipeId) => {
       const res = await response.json();
       if (res.status === false || !res) {
         let msg = res.message;
-        alert(`user not found ${msg}`);
+        errorToast(`user not found ${msg}`);
         return;
       } else {
         setRecipe(res.data);
@@ -40,7 +68,7 @@ const getRecipeById = async (recipeId) => {
     const token = getCookie('jwtoken');
     if (token) {
         
-      const response = await fetch(`/getComment/${recipeId}`, {
+      const response = await fetch(`${API_URL}/getComment/${recipeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +108,7 @@ const getRecipeById = async (recipeId) => {
       let decoded = jwt_decode(token)
       let userId = decoded.userId
 
-      let response = await fetch(`/deletecomment/${userId}/${recipeId}/${commentId}`,{
+      let response = await fetch(`${API_URL}/deletecomment/${userId}/${recipeId}/${commentId}`,{
         method:"DELETE",
         headers:{
           'Content-Type': 'application/json',
@@ -91,11 +119,11 @@ const getRecipeById = async (recipeId) => {
       const res = await response.json();
       if(res.status === false || !res){
         let msg = res.message
-        alert(`error${msg}`)
+        errorToast(`error${msg}`)
         return;
       }
       else {
-        alert('Comment deleted successfully');
+        successToast('Comment deleted successfully');
         navigate('/ViewRecipe')
         return;
       }
@@ -120,7 +148,7 @@ const getRecipeById = async (recipeId) => {
 
       //get the user ID from the decoded JWT
       const userId = decoded.userId;
-      const response = await fetch(`/comment/${userId}/${recipeId}`, {
+      const response = await fetch(`${API_URL}/comment/${userId}/${recipeId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,11 +163,11 @@ const getRecipeById = async (recipeId) => {
       const res = await response.json();
       if (res.status === false || !res) {
         let msg = res.message;
-        alert(`Error: ${msg}`);
+        errorToast(`Error: ${msg}`);
         return;
       } else {
         setComment('');
-        alert('Comment added successfully');
+        successToast('Comment added successfully');
         navigate('/ViewRecipe')
         return;
       }

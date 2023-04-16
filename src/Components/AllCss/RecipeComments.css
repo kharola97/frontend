@@ -1,20 +1,4 @@
-/* .RecipeComments {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .RecipeDetails {
-    flex: 1;
-  }
-  
-  .Comments {
-    flex: 1;
-    margin-left: 20px;
-  } */
-
-  
-  .RecipeComments {
+ .RecipeComments {
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;

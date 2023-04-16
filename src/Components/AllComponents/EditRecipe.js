@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams,useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
-import { getCookie } from '../Cookie/Cookies';
+import { getCookie } from '../../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./EditRecipe.css"
+import "../AllCss/EditRecipe.css"
+import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -50,7 +51,7 @@ const handleDelete = async()=>{
     //decode the JWT
     const decoded = jwt_decode(token)
     const userId = decoded.userId
-    const response = await fetch(`/deleteRecipe/${recipeId}/${userId}`,{
+    const response = await fetch(`${API_URL}/deleteRecipe/${recipeId}/${userId}`,{
       method:"DELETE",
       headers:{
         'Content-Type': 'application/json',
@@ -60,8 +61,8 @@ const handleDelete = async()=>{
     
     const res = await response.json();
     if (res.status === false || !res) {
-      // let msg = res.message;
-      // errorToast(`user ${msg}`);
+      let msg = res.message;
+      errorToast(`user ${msg}`);
       return;
     } else {
       successToast("Recipe deleted successfully")
@@ -82,12 +83,8 @@ const getRecipe = async () => {
   try {
     const token = getCookie('jwtoken');
   if (token) {
-    //decode the JWT
-    //const decoded = jwt_decode(token);
-
-    //get the user ID from the decoded JWT
-    //const userId = decoded.userId;
-    const response = await fetch(`/recipeById/${recipeId}`, {
+    
+    const response = await fetch(`${API_URL}/recipeById/${recipeId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -134,7 +131,7 @@ const getRecipe = async () => {
       const userId = decoded.userId
       console.log(isPublic)
     // Send the edited recipe details to the server for saving
-    let response = await fetch(`/updateRecipe/${userId}/${recipeId}`, {
+    let response = await fetch(`${API_URL}/updateRecipe/${userId}/${recipeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -145,8 +142,8 @@ const getRecipe = async () => {
     const res = await response.json()
     console.log(res,"update")
     if(res.status===false||!res){
-      // let msg = res.message
-      // errorToast(`${msg}`)
+      let msg = res.message
+      errorToast(`${msg}`)
     }
     else{
       setEditedRecipe(res.data)

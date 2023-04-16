@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import recipe from "../Images/recipe5.png";
+import recipe from "../../Images/recipe5.png";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./Navbar.css"
+import "../AllCss/Navbar.css"
 import Cookies from 'js-cookie';
 
 const successToast = (message) => {

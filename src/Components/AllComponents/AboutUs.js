@@ -1,6 +1,6 @@
 import React from 'react'
-import backgroundImage from "../Images/ella-olsson-oPBjWBCcAEo-unsplash.jpg"
-import "./AboutUs.css"
+import backgroundImage from "../../Images/ella-olsson-oPBjWBCcAEo-unsplash.jpg"
+import "../AllCss/AboutUs.css"
 
 function AboutUs() {
   return (

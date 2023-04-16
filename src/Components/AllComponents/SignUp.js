@@ -9,7 +9,8 @@ import {
   isValidNo,
   
   
-} from "../Validations/Validations"
+} from "../../Validations/Validations"
+import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -48,55 +49,60 @@ function SignUp() {
     value = e.target.value
     setUser({...user, [name] : value})
   }
-
-  const postData = async (e)=>{
-    
-         e.preventDefault()
-         const {Fullname,email,number,password,cpassword} = user;
-         if(!Fullname|| !email || !number || !password || !cpassword){
-          errorToast("Enter all the details")
-        return;}
-        if(!isValidName(Fullname)){
-          errorToast("Name should only contain alphabets")
-          return
-        }
-        if(!isValidateEmail(email)){
-          errorToast("Incorrect email correct email format- username@domainname.com")
-          return
-        }
-        if(!isValidNo(number)){
-          errorToast("Incorrect phone number")
-          return
-        }
-        if(!passwordVal(password)){
-          errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12")
-          return
-        }
-        if(password!==cpassword){
-          errorToast("passwords are not matching")
-          return;
-        }
-        const response =  await fetch("/register",{
-          method:"POST",
-          headers:{
-            "Content-Type" : "application/json"
-          },
-          body: JSON.stringify({
-            Fullname,email,number,password,cpassword
-          })
-
-        })
-        console.log(JSON.stringify({Fullname,email,number,password,cpassword}))
-        const res = await response.json()
-        if(res.status===false || !res){
-          let msg = res.message
-          errorToast(`login failed because ${msg}`);
-        }
-        else{
-          successToast('Login was successfull!');
-          navigate("/Login")
-        }
+  const postData = async (e) => {
+    e.preventDefault();
+    const { Fullname, email, number, password, cpassword } = user;
+    const trimmedUser = {
+      Fullname: Fullname.trim(),
+      email: email.trim(),
+      number: number.trim(),
+      password: password.trim(),
+      cpassword: cpassword.trim()
+    };
+  
+    if (!trimmedUser.Fullname || !trimmedUser.email || !trimmedUser.number || !trimmedUser.password || !trimmedUser.cpassword) {
+      errorToast("Enter all the details");
+      return;
+    }
+    if (!isValidName(trimmedUser.Fullname)) {
+      errorToast("Name should only contain alphabets");
+      return;
+    }
+    if (!isValidateEmail(trimmedUser.email)) {
+      errorToast("Incorrect email correct email format- username@domainname.com");
+      return;
+    }
+    if (!isValidNo(trimmedUser.number)) {
+      errorToast("Incorrect phone number");
+      return;
+    }
+    if (!passwordVal(trimmedUser.password)) {
+      errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12");
+      return;
+    }
+    if (trimmedUser.password !== trimmedUser.cpassword) {
+      errorToast("passwords are not matching");
+      return;
+    }
+  
+    const response = await fetch(`${API_URL}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(trimmedUser)
+    });
+  
+    const res = await response.json();
+    if (res.status === false || !res) {
+      let msg = res.message;
+      errorToast(`login failed because ${msg}`);
+    } else {
+      successToast('Login was successful!');
+      navigate("/Login");
+    }
   }
+  
   return (
     <>
       <section className='signup'>

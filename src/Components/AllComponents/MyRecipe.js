@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import jwt_decode from 'jwt-decode';
-import { getCookie } from '../Cookie/Cookies';
+import { getCookie } from '../../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Myrecipe.css';
+import '../AllCss/Myrecipe.css';
+import API_URL from '../../Config/Api-Url';
 
 
 const errorToast = (message) => {
@@ -48,7 +49,7 @@ function MyRecipe() {
 
       //get the user ID from the decoded JWT
       const userId = decoded.userId;
-      const response = await fetch(`/getRecipeByUser/${userId}`, {
+      const response = await fetch(`${API_URL}/getRecipeByUser/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ const getComments = async (recipeId) => {
   try {
     const token = getCookie('jwtoken');
     if (token) {
-      const response = await fetch(`/getComment/${recipeId}`, {
+      const response = await fetch(`${API_URL}/getComment/${recipeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import "./Recipe.css"
+import "../AllCss/Recipe.css"
 import {useNavigate} from 'react-router-dom'
-import { getCookie } from '../Cookie/Cookies';
+import { getCookie } from '../../Cookie/Cookies';
 import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { isValidRating,isValidInput} from "../Validations/Validations"
-
+import { isValidRating,isValidInput} from "../../Validations/Validations"
+import API_URL from '../../Config/Api-Url';
 
 
 
@@ -86,7 +86,7 @@ function Recipe() {
                 //get the user ID from the decoded JWT
                   const userId = decoded.userId
                
-          const response = await fetch(`/recipe/${userId}`, {
+          const response = await fetch(`${API_URL}/recipe/${userId}`, {
             method:"POSt",
             headers:{
                 "Content-Type" : "application/json",

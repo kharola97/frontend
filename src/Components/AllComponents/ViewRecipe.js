@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './ViewRecipe.css';
+import '../AllCss/ViewRecipe.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from 'jwt-decode';
-import { getCookie } from '../Cookie/Cookies';
+import { getCookie } from '../../Cookie/Cookies';
 import { useNavigate } from "react-router-dom";
+import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -40,21 +41,18 @@ const [rating, setRating] = useState('');
 const [cookingtime, setCookingTime] = useState('');
 
 const navigate = useNavigate()
-// const [comments, setComments] = useState([]);
-// const [selectedRecipeId, setSelectedRecipeId] = useState(null);
 
-
-  const getRecipeData = async () => {
+const getRecipeData = async () => {
     
-    const token = getCookie('jwtoken');
+  const token = getCookie('jwtoken');
           if(token){
              
-              //decode the JWT
-            const decoded = jwt_decode(token);
+  //decode the JWT
+  const decoded = jwt_decode(token);
 
-                //get the user ID from the decoded JWT
-          const userId = decoded.userId
-    let url = `/getrecipe/${userId}`;
+    //get the user ID from the decoded JWT
+    const userId = decoded.userId
+    let url = `${API_URL}/getrecipe/${userId}`;
   const params = [];
 
   if (dishName) {
@@ -97,41 +95,7 @@ const navigate = useNavigate()
   };
   
 }
-// const getComments = async (recipeId) => {
-//   console.log(recipeId)
-//   const token = getCookie('jwtoken');
-//   if (token) {
-//     const response = await fetch(`/getComment/${recipeId}`, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         cookie: 'Token ' + token,
-//       },
-//     });
-//     const res = await response.json();
-//     if (res.status === false || !res) {
-//       // let msg = res.message;
-//       // errorToast(`user not found ${msg}`);
-//       setComments([]);
-//       return;
-//     } else {
-//       let commentArray = res.data.comment;
-        
-//       if (commentArray === undefined) {
-//         setComments([]);
-//         return;
-//       } else {
-//         setComments(commentArray);
-//         return;
-//       }
-//     }
-//   }
-// };
-// useEffect(() => {
-//   recipes.forEach(recipe => {
-//       getComments(recipe._id);
-//   });
-// },  []);
+
 const handleComment = async (recipeId)=>{
       navigate(`/RecipeComments/${recipeId}`)
 }

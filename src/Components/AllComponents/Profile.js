@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getCookie } from '../Cookie/Cookies';
+import { getCookie } from '../../Cookie/Cookies';
 import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./Profile.css"
-import {isValidateEmail,passwordVal,isValidName,isValidNo,} from "../Validations/Validations"
+import "../AllCss/Profile.css"
+import {isValidateEmail,passwordVal,isValidName,isValidNo,} from "../../Validations/Validations"
+import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -50,7 +51,7 @@ const getUserDetails = async()=>{
 
         //get the user ID from the decoded JWT
     const userId = decoded.userId
-     const response = await fetch(`/getuserdetails/${userId}`,{
+     const response = await fetch(`${API_URL}/getuserdetails/${userId}`,{
       method:"GET",
       headers:{
         "Content-Type" : "application/json",
@@ -113,7 +114,7 @@ useEffect(() => {
       //decode the token
       const decoded = jwt_decode(token)
       const userId = decoded.userId
-      const response = await fetch(`/updateUserDetails/${userId}`,{
+      const response = await fetch(`${API_URL}/updateUserDetails/${userId}`,{
         method:"PUT",
         headers:{
           "Content-Type" : "application/json",
