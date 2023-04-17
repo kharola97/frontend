@@ -86,11 +86,11 @@ useEffect(() => {
     setEditing(true);
   }
 
-  const handleSaveClick = async(e) => {
+  const handleSaveClick = async() => {
     try {
       
    
-    e.preventDefault()
+   
     const {Fullname,email,number,password} = user;
     if(Fullname){
       if(!isValidName(Fullname)){

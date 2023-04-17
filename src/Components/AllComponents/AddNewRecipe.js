@@ -51,12 +51,9 @@ function Recipe() {
         setRecipe({...recipe,[name]:value})
     }
 
-    const postData = async  (e)=>{
+    const postData = async  ()=>{
       try {
-        
-     
-          e.preventDefault()
-          console.log(recipe,"recipe")
+        console.log(recipe,"recipe")
           const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
 
           if(!dishname || !isValidInput(dishname)){

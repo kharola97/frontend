@@ -75,9 +75,9 @@ function MyRecipe() {
   
 
 
-const getComments = async (e,recipeId) => {
+const getComments = async (recipeId) => {
   try {
-    e.preventDeafult()
+    
     const token = getCookie('jwtoken');
     if (token) {
       const response = await fetch(`https://rapp-t5nt.onrender.com/getComment/${recipeId}`, {
