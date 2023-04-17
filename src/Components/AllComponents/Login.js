@@ -31,8 +31,9 @@ function Login(props) {
 const [email,setEmail] = useState()
 const [password, setPassword] = useState()
 
- const handleLogin = async ()=>{
+ const handleLogin = async (e)=>{
   try {
+    e.preventDefault()
     if(!email){
     errorToast("Email is required")
     return;
