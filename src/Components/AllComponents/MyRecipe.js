@@ -49,7 +49,7 @@ function MyRecipe() {
 
       //get the user ID from the decoded JWT
       const userId = decoded.userId;
-      const response = await fetch(`${API_URL}/http://localhost:4500/getRecipeByUser/${userId}`, {
+      const response = await fetch(`https://myapp-j3dc.onrender.com/getRecipeByUser/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const getComments = async (recipeId) => {
   try {
     const token = getCookie('jwtoken');
     if (token) {
-      const response = await fetch(`${API_URL}/http://localhost:4500/getComment/${recipeId}`, {
+      const response = await fetch(`https://myapp-j3dc.onrender.com/getComment/${recipeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -87,8 +87,8 @@ const getComments = async (recipeId) => {
       });
       const res = await response.json();
       if (res.status === false || !res) {
-        // let msg = res.message;
-        // errorToast(`user ${msg}`);
+        let msg = res.message;
+        errorToast(`user ${msg}`);
         return;
       } else {
         if (res.data === undefined) {
