@@ -51,7 +51,7 @@ const getUserDetails = async()=>{
 
         //get the user ID from the decoded JWT
     const userId = decoded.userId
-     const response = await fetch(`https://myrecipe-ujbh.onrender.com/getuserdetails/${userId}`,{
+     const response = await fetch(`https://rapp-t5nt.onrender.com/getuserdetails/${userId}`,{
       method:"GET",
       headers:{
         "Content-Type" : "application/json",
@@ -114,7 +114,7 @@ useEffect(() => {
       //decode the token
       const decoded = jwt_decode(token)
       const userId = decoded.userId
-      const response = await fetch(`https://myrecipe-ujbh.onrender.com/updateUserDetails/${userId}`,{
+      const response = await fetch(`https://rapp-t5nt.onrender.com/updateUserDetails/${userId}`,{
         method:"PUT",
         headers:{
           "Content-Type" : "application/json",

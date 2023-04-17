@@ -23,11 +23,11 @@ const isValidateEmail = (email)=> {
   
 
   const isValidRating =  (number) => {
-     let num = number.trim()
-     console.log(num)
+     
+    
     const validnumber =  /^[0-5]([.][0-9]+)?$/;
     // const validnumber = /^[0-5](\.[0-9]+)?$/;
-    return validnumber.test(num);
+    return validnumber.test(number);
   };
 
   const isValidInput = (str)=>{

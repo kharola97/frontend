@@ -54,7 +54,7 @@ function Recipe() {
 
     const postData = async  (e)=>{
           e.preventDefault()
-          console.log(isPublic)
+          
           const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
 
           if(!dishname || !isValidInput(dishname)){
@@ -86,7 +86,7 @@ function Recipe() {
                 //get the user ID from the decoded JWT
                   const userId = decoded.userId
                
-          const response = await fetch(`https://myrecipe-ujbh.onrender.com/recipe/${userId}`, {
+          const response = await fetch(`https://rapp-t5nt.onrender.com/recipe/${userId}`, {
             method:"POSt",
             headers:{
                 "Content-Type" : "application/json",
@@ -98,7 +98,7 @@ function Recipe() {
         
 
           const res = await response.json()
-          console.log(res,"hello")
+          
           if(res.status===false || !res){
             let msg = res.message
             errorToast(`submission failed beacsue ${msg}`)
