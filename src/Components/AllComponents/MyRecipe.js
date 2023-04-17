@@ -41,6 +41,8 @@ function MyRecipe() {
   const getMyRecipe = async () => {
 
     try {
+      
+      
       const token = getCookie('jwtoken');
     if (token) {
       //decode the JWT
@@ -73,8 +75,9 @@ function MyRecipe() {
   
 
 
-const getComments = async (recipeId) => {
+const getComments = async (e,recipeId) => {
   try {
+    e.preventDeafult()
     const token = getCookie('jwtoken');
     if (token) {
       const response = await fetch(`https://rapp-t5nt.onrender.com/getComment/${recipeId}`, {

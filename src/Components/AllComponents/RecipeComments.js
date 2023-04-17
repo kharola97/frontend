@@ -42,6 +42,7 @@ function RecipeComments() {
 
 
 const getRecipeById = async (recipeId) => {
+  try {
     const token = getCookie('jwtoken');
     if (token) {
       const response = await fetch(`https://rapp-t5nt.onrender.com/recipeById/${recipeId}`, {
@@ -61,9 +62,17 @@ const getRecipeById = async (recipeId) => {
         return;
       }
     }
+  } catch (error) {
+    throw error
+  }
   };
 
+  
+
   const getComment = async(recipeId)=>{
+    try {
+      
+   
     const token = getCookie('jwtoken');
     if (token) {
         
@@ -97,11 +106,18 @@ const getRecipeById = async (recipeId) => {
           return;
         }
       }
+      
     }
+  } catch (error) {
+      throw error
+  }
 }
   
 
   const handleDelete = async(commentId,text)=>{
+    try {
+      
+   
     const token = getCookie('jwtoken');
     if(token){
       let decoded = jwt_decode(token)
@@ -127,6 +143,9 @@ const getRecipeById = async (recipeId) => {
         return;
       }
     }
+  } catch (error) {
+      throw error
+  }
 
   }
 
@@ -135,12 +154,13 @@ const getRecipeById = async (recipeId) => {
     getComment(recipeId)
   }, []);
 
-  const handleCommentChange = (event) => {
-    setEditComment(event.target.value);
+  const handleCommentChange = (e) => {
+    setEditComment(e.target.value);
   };
 
-  const handleCommentSubmit = async (event) => {
-    event.preventDefault();
+  const handleCommentSubmit = async () => {
+    try {
+    
     const token = getCookie('jwtoken');
     if (token) {
         const decoded = jwt_decode(token);
@@ -171,6 +191,9 @@ const getRecipeById = async (recipeId) => {
         return;
       }
     }
+  } catch (error) {
+       throw error
+  }
   };
 
   return (

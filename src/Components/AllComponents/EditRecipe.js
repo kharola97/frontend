@@ -42,9 +42,10 @@ function EditRecipe() {
     cookingtime: ''
   });
 
-const handleDelete = async()=>{
+const handleDelete = async(e)=>{
 
   try {
+    e.preventDefault()
     const token = getCookie('jwtoken');
   if(token){
     //decode the JWT
@@ -78,8 +79,9 @@ const handleDelete = async()=>{
 
 
 
-const getRecipe = async () => {
+const getRecipe = async (e) => {
   try {
+    e.preventDefault()
     const token = getCookie('jwtoken');
   if (token) {
     
@@ -110,20 +112,20 @@ const getRecipe = async () => {
  
   getRecipe();
  },[])
- const handleToggle = (event)=>{
+ const handleToggle = (e)=>{
 
-   setIsPublic(event.target.value === "public");
+   setIsPublic(e.target.value === "public");
  }
 
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setEditedRecipe({ ...editedRecipe, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (e) => {
    try {
-    event.preventDefault();
+    e.preventDefault();
     const token = getCookie('jwtoken');
     if(token){
       const decoded = jwt_decode(token)

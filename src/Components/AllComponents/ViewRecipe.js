@@ -42,6 +42,7 @@ const [cookingtime, setCookingTime] = useState('');
 const navigate = useNavigate()
 
 const getRecipeData = async () => {
+   try {
     
   const token = getCookie('jwtoken');
           if(token){
@@ -81,7 +82,7 @@ const getRecipeData = async () => {
     });
   
     const res = await response.json();
-   
+   console.log(res.data,"data")
     if (res.status === false || !res) {
       let msg = res.message;
       errorToast(`No recipe found ${msg}`);
@@ -92,6 +93,9 @@ const getRecipeData = async () => {
       return;
     }
   };
+} catch (error) {
+    throw error
+}
   
 }
 
@@ -104,8 +108,8 @@ const handleComment = async (recipeId)=>{
     getRecipeData();
     return
   }, []);
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     getRecipeData();
     successToast('Here are the recipes');
     return

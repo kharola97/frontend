@@ -42,6 +42,9 @@ function Profile() {
     }
 
 const getUserDetails = async()=>{
+    try {
+      
+   
     const token = getCookie('jwtoken');
     if(token){
           
@@ -69,6 +72,9 @@ const getUserDetails = async()=>{
       return;
     }
   }
+} catch (error) {
+      throw error
+}
 }
 //for initially rendering the user details on page using useEffect
 useEffect(() => {
@@ -81,6 +87,9 @@ useEffect(() => {
   }
 
   const handleSaveClick = async(e) => {
+    try {
+      
+   
     e.preventDefault()
     const {Fullname,email,number,password} = user;
     if(Fullname){
@@ -137,6 +146,9 @@ useEffect(() => {
         return;
       }
     }
+  } catch (error) {
+      throw error
+  }
   }
 
   const handleCancelClick = () => {

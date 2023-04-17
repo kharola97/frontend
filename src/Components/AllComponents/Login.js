@@ -32,6 +32,9 @@ const [email,setEmail] = useState()
 const [password, setPassword] = useState()
 
  const handleLogin = async (e)=>{
+  try {
+    
+ 
   e.preventDefault()
 
   if(!email){
@@ -63,6 +66,9 @@ const [password, setPassword] = useState()
          navigate("/")
          props.setLoggedIn(true);
         }
+      } catch (error) {
+             throw error
+      }
   
  }
   return (

@@ -52,6 +52,9 @@ function Recipe() {
     }
 
     const postData = async  (e)=>{
+      try {
+        
+     
           e.preventDefault()
           console.log(recipe,"recipe")
           const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
@@ -108,6 +111,9 @@ function Recipe() {
                    navigate("/")
           }
     }
+  } catch (error) {
+        throw error
+  }
   }
   return (
     <>
