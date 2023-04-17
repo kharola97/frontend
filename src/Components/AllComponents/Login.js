@@ -44,7 +44,7 @@ const [password, setPassword] = useState()
     return;
   }
   
-  const response = await fetch(`https://myapp-j3dc.onrender.com//login`, {
+  const response = await fetch(`https://myrecipe-ujbh.onrender.com/login`, {
     method:"POST",
     headers:{
       "Content-Type":"application/json"
