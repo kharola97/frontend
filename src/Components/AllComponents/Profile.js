@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../AllCss/Profile.css"
 import {isValidateEmail,passwordVal,isValidName,isValidNo,} from "../../Validations/Validations"
-import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {

@@ -6,7 +6,6 @@ import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isValidRating,isValidInput} from "../../Validations/Validations"
-import API_URL from '../../Config/Api-Url';
 
 
 
@@ -54,7 +53,7 @@ function Recipe() {
 
     const postData = async  (e)=>{
           e.preventDefault()
-          
+          console.log(recipe,"recipe")
           const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
 
           if(!dishname || !isValidInput(dishname)){
@@ -98,7 +97,7 @@ function Recipe() {
         
 
           const res = await response.json()
-          
+          console.log(res.data)
           if(res.status===false || !res){
             let msg = res.message
             errorToast(`submission failed beacsue ${msg}`)

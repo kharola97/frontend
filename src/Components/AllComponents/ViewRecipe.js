@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from 'jwt-decode';
 import { getCookie } from '../../Cookie/Cookies';
 import { useNavigate } from "react-router-dom";
-import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {

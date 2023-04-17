@@ -5,7 +5,6 @@ import { getCookie } from '../../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../AllCss/Myrecipe.css';
-import API_URL from '../../Config/Api-Url';
 
 
 const errorToast = (message) => {
