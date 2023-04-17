@@ -10,7 +10,7 @@ import {
   
   
 } from "../../Validations/Validations"
-import API_URL from '../../Config/Api-Url';
+// import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -85,7 +85,7 @@ function SignUp() {
       return;
     }
   
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`https://myrecipeapp.onrender.com/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

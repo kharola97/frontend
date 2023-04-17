@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { NavLink ,useNavigate} from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import API_URL from '../../Config/Api-Url';
+// import API_URL from '../../Config/Api-Url';
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -44,7 +44,7 @@ const [password, setPassword] = useState()
     return;
   }
   
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch(`https://myrecipeapp.onrender.com/login`, {
     method:"POST",
     headers:{
       "Content-Type":"application/json"
