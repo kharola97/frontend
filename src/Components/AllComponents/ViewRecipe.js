@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import jwt_decode from 'jwt-decode';
 import { getCookie } from '../../Cookie/Cookies';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -41,63 +43,119 @@ const [cookingtime, setCookingTime] = useState('');
 
 const navigate = useNavigate()
 
-const getRecipeData = async () => {
-   try {
+// const getRecipeData = async () => {
+//    try {
     
-  const token = getCookie('jwtoken');
-          if(token){
+//   const token = getCookie('jwtoken');
+//           if(token){
              
-  //decode the JWT
-  const decoded = jwt_decode(token);
+//   //decode the JWT
+//   const decoded = jwt_decode(token);
 
-    //get the user ID from the decoded JWT
-    const userId = decoded.userId
-    let url = `https://rapp-t5nt.onrender.com/${userId}`;
-  const params = [];
+//     //get the user ID from the decoded JWT
+//     const userId = decoded.userId
+//     let url = `http://localhost:4500/getrecipe/${userId}`;
+//   const params = [];
 
-  if (dishName) {
-    params.push(`dishname=${dishName}`);
-  }
-  if (ingredients) {
-    params.push(`ingredients=${ingredients}`);
-  }
-  if (rating) {
-    params.push(`rating=${rating}`);
-  }
-  if (cookingtime) {
-    params.push(`cookingtime=${cookingtime}`);
-  }
+//   if (dishName) {
+//     params.push(`dishname=${dishName}`);
+//   }
+//   if (ingredients) {
+//     params.push(`ingredients=${ingredients}`);
+//   }
+//   if (rating) {
+//     params.push(`rating=${rating}`);
+//   }
+//   if (cookingtime) {
+//     params.push(`cookingtime=${cookingtime}`);
+//   }
   
-  if (params.length) {
-    url += `?${params.join('&')}`;
-  }
+//   if (params.length) {
+//     url += `?${params.join('&')}`;
+//   }
         
-      const response = await fetch(url, {
-      method : "GET",
-      headers:{
-        "Content-Type" : "application/json",
+//       const response = await fetch(url, {
+//       method : "GET",
+//       headers:{
+//         "Content-Type" : "application/json",
 
-            'cookie': 'Token ' + token
-      }
-    });
+//             "Cookie" : token
+//       }
+//     });
   
-    const res = await response.json();
-   console.log(res.data,"data")
-    if (res.status === false || !res) {
-      let msg = res.message;
-      errorToast(`No recipe found ${msg}`);
-      return;
-    } else {
+//     const res = await response.json();
+   
+//     if (res.status === false || !res) {
+//       let msg = res.message;
+//       errorToast(`No recipe found ${msg}`);
+//       return;
+//     } else {
       
-      setRecipes(res.data);
-      return;
-    }
-  };
-} catch (error) {
-    throw error
-}
+//       setRecipes(res.data);
+//       return;
+//     }
+//   };
+// } catch (error) {
+//     throw error
+// }
   
-}
+// }
+
+const getRecipeData = async () => {
+  try {
+    const token = localStorage.getItem('token')
+
+    console.log(token)
+    if (token) {
+      // Decode the JWT
+      const decoded = jwt_decode(token);
+      const userId = decoded.userId;
+
+      let url = `http://localhost:4500/getrecipe/${userId}`;
+      const params = [];
+
+      if (dishName) {
+        params.push(`dishname=${dishName}`);
+      }
+      if (ingredients) {
+        params.push(`ingredients=${ingredients}`);
+      }
+      if (rating) {
+        params.push(`rating=${rating}`);
+      }
+      if (cookingtime) {
+        params.push(`cookingtime=${cookingtime}`);
+      }
+      if (params.length) {
+        url += `?${params.join('&')}`;
+      }
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization" : "jwtoken=" + token
+        },
+      };
+
+      const response = await axios.get(url, config);
+
+      const res = response.data;
+
+      if (res.status === false || !res) {
+        let msg = res.message;
+        errorToast(`No recipe found ${msg}`);
+        return;
+      } else {
+        setRecipes(res.data);
+        return;
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 const handleComment = async (recipeId)=>{
       navigate(`/RecipeComments/${recipeId}`)

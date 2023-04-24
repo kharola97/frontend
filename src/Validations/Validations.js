@@ -19,9 +19,6 @@ const isValidateEmail = (email)=> {
     const validnumber = /^[6-9]\d{9}$/;
     return validnumber.test(number);
   };
-  
-  
-
   const isValidRating =  (number) => {
      
     
@@ -31,7 +28,7 @@ const isValidateEmail = (email)=> {
   };
 
   const isValidInput = (str)=>{
-    const input = /^[a-zA-Z\d\s]*$/
+    const input = /^[a-zA-Z\d\s]*$/;
     return input.test(str)
   }
   

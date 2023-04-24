@@ -5,6 +5,9 @@ import { getCookie } from '../../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../AllCss/EditRecipe.css"
+import axios from 'axios';
+
+
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -42,71 +45,130 @@ function EditRecipe() {
     cookingtime: ''
   });
 
-const handleDelete = async()=>{
+  const handleDelete = async () => {
+    try {
+      const token = localStorage.getItem('token')
 
-  try {
-    
-    const token = getCookie('jwtoken');
-  if(token){
-    //decode the JWT
-    const decoded = jwt_decode(token)
-    const userId = decoded.userId
-    const response = await fetch(`https://rapp-t5nt.onrender.com/deleteRecipe/${recipeId}/${userId}`,{
-      method:"DELETE",
-      headers:{
-        'Content-Type': 'application/json',
-        "cookie": 'Token ' + token,
+      if (token) {
+        //decode the JWT
+        const decoded = jwt_decode(token)
+        const userId = decoded.userId
+  
+        const response = await axios.delete(`http://localhost:4500/deleteRecipe/${recipeId}/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": "jwtoken=" + token,
+          },
+        });
+  
+        const res = response.data;
+        if (res.status === false || !res) {
+          let msg = res.message;
+          errorToast(`user ${msg}`);
+          return;
+        } else {
+          successToast("Recipe deleted successfully")
+          navigate('/')
+          return;
+        }
       }
-    })
-    
-    const res = await response.json();
-    if (res.status === false || !res) {
-      let msg = res.message;
-      errorToast(`user ${msg}`);
-      return;
-    } else {
-      successToast("Recipe deleted successfully")
-      navigate('/')
-      return;
+    } catch (error) {
+      throw error
     }
   }
-} catch (error) {
-      throw error
-}
-}
 
 
+
+
+//   const handleDelete = async()=>{
+
+//   try {
+    
+//     const token = getCookie('jwtoken');
+//   if(token){
+//     //decode the JWT
+//     const decoded = jwt_decode(token)
+//     const userId = decoded.userId
+//     const response = await fetch(`http://localhost:4500/deleteRecipe/${recipeId}/${userId}`,{
+//       method:"DELETE",
+//       headers:{
+//         'Content-Type': 'application/json',
+//         "Cookie": token,
+//       }
+//     })
+    
+//     const res = await response.json();
+//     if (res.status === false || !res) {
+//       let msg = res.message;
+//       errorToast(`user ${msg}`);
+//       return;
+//     } else {
+//       successToast("Recipe deleted successfully")
+//       navigate('/')
+//       return;
+//     }
+//   }
+// } catch (error) {
+//       throw error
+// }
+// }
 
 
 
 const getRecipe = async () => {
   try {
-    
-    const token = getCookie('jwtoken');
-  if (token) {
-    
-    const response = await fetch(`https://rapp-t5nt.onrender.com/recipeById/${recipeId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        "cookie": 'Token ' + token,
-      },
-    });
-    const res = await response.json();
-    if (res.status === false || !res) {
-      let msg = res.message;
-      errorToast(`user went ${msg}`);
-      return;
-    } else {
-      setEditedRecipe(res.data);
-      setIsPublic(res.data.isPublic)
-      return;
+    const token = localStorage.getItem('token')
+    if (token) {
+      const response = await axios.get(`http://localhost:4500/recipeById/${recipeId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "jwtoken=" + token,
+        },
+      });
+      const res = response.data;
+      if (res.status === false || !res) {
+        let msg = res.message;
+        errorToast(`user went ${msg}`);
+        return;
+      } else {
+        setEditedRecipe(res.data);
+        setIsPublic(res.data.isPublic);
+        return;
+      }
     }
+  } catch (error) {
+    throw error;
   }
-} catch (error) {
-     throw error
-}
 };
+
+// const getRecipe = async () => {
+//   try {
+    
+//     const token = getCookie('jwtoken');
+//   if (token) {
+    
+//     const response = await fetch(`http://localhost:4500/recipeById/${recipeId}`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         "Cookie": token,
+//       },
+//     });
+//     const res = await response.json();
+//     if (res.status === false || !res) {
+//       let msg = res.message;
+//       errorToast(`user went ${msg}`);
+//       return;
+//     } else {
+//       setEditedRecipe(res.data);
+//       setIsPublic(res.data.isPublic)
+//       return;
+//     }
+//   }
+// } catch (error) {
+//      throw error
+// }
+// };
 
  useEffect(()=>{
  
@@ -123,38 +185,74 @@ const getRecipe = async () => {
     setEditedRecipe({ ...editedRecipe, [name]: value });
   };
 
-  const handleSubmit = async () => {
-   try {
+//   const handleSubmit = async () => {
+//    try {
     
-    const token = getCookie('jwtoken');
-    if(token){
-      const decoded = jwt_decode(token)
-      const userId = decoded.userId
-      console.log(isPublic)
-    // Send the edited recipe details to the server for saving
-    let response = await fetch(`https://rapp-t5nt.onrender.com/updateRecipe/${userId}/${recipeId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({...editedRecipe,isPublic})
-    })
+//     const token = getCookie('jwtoken');
+//     if(token){
+//       const decoded = jwt_decode(token)
+//       const userId = decoded.userId
+     
+//     // Send the edited recipe details to the server for saving
+//     let response = await fetch(`http://localhost:4500/updateRecipe/${userId}/${recipeId}`, {
+//       method: 'PUT',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         "Cookie": token,
+//       },
+//       body: JSON.stringify({...editedRecipe,isPublic})
+//     })
 
-    const res = await response.json()
+//     const res = await response.json()
     
-    if(res.status===false||!res){
-      let msg = res.message
-      errorToast(`${msg}`)
+//     if(res.status===false||!res){
+//       let msg = res.message
+//       errorToast(`${msg}`)
+//     }
+//     else{
+//       setEditedRecipe(res.data)
+//       navigate('/MyRecipe')
+//     }
+//   }
+// } catch (error) {
+//     throw error
+// }
+//   };
+
+const handleSubmit = async (e) => {
+  try {
+    e.preventDefault()
+    const token = localStorage.getItem('token')
+
+    if (token) {
+      const decoded = jwt_decode(token);
+      const userId = decoded.userId;
+
+      // Send the edited recipe details to the server for saving
+      let response = await axios.put(`http://localhost:4500/updateRecipe/${userId}/${recipeId}`, {
+        ...editedRecipe,
+        isPublic
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization" : "jwtoken=" + token
+        }
+      });
+
+      const res = response.data;
+      
+      if (res.status === false || !res) {
+        let msg = res.message;
+        errorToast(`${msg}`);
+      } else {
+        setEditedRecipe(res.data);
+        navigate('/MyRecipe');
+      }
     }
-    else{
-      setEditedRecipe(res.data)
-      navigate('/MyRecipe')
-    }
+  } catch (error) {
+    throw error;
   }
-} catch (error) {
-    throw error
-}
-  };
+};
 
   return (
     <div className='form'>

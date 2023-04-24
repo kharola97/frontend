@@ -5,6 +5,18 @@ import { getCookie } from '../../Cookie/Cookies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../AllCss/Myrecipe.css';
+import axios from 'axios';
+
+import Cookies from 'js-cookie';
+
+// const token = localStorage.getItem('token')
+// console.log(token,"myrecipe")
+
+// import Cookies from 'js-cookie';
+
+// const token = Cookies.get('jwtoken');
+// console.log(document.cookie)
+// console.log(token,"token")
 
 
 const errorToast = (message) => {
@@ -36,82 +48,146 @@ function MyRecipe() {
   const [comments, setComments] = useState({});
   const navigate = useNavigate()
 
-
-
   const getMyRecipe = async () => {
-
     try {
-      
-      
-      const token = getCookie('jwtoken');
-    if (token) {
-      //decode the JWT
-      const decoded = jwt_decode(token);
+      const token = localStorage.getItem('token')
 
-      //get the user ID from the decoded JWT
-      const userId = decoded.userId;
-      const response = await fetch(`https://rapp-t5nt.onrender.com/getRecipeByUser/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          cookie: 'Token ' + token,
-        },
-      });
-      const res = await response.json();
-      console.log(res)
-      if (res.status === false || !res) {
-        let msg = res.message;
-        errorToast(`error  ${msg}`);
-        return;
-      } else {
-        setRecipes(res.data);
-        return;
-      }
-    }
-  } catch (error) {
-      throw error
-  }
-  };
+      if (token) {
+        const decoded = jwt_decode(token);
+        const userId = decoded.userId;
   
-
-
-const getComments = async (recipeId) => {
-  try {
-    
-    const token = getCookie('jwtoken');
-    if (token) {
-      const response = await fetch(`https://rapp-t5nt.onrender.com/getComment/${recipeId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          cookie: 'Token ' + token,
-        },
-      });
-      const res = await response.json();
-      if (res.status === false || !res) {
-        let msg = res.message;
-        errorToast(`user ${msg}`);
-        return;
-      } else {
-        if (res.data === undefined) {
-          setComments((prevComments) => ({
-            ...prevComments,
-            [recipeId]: [],
-          }));
+        const response = await axios.get(`http://localhost:4500/getRecipeByUser/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "jwtoken=" +  token,
+          },
+        });
+  
+        const res = response.data;
+        if (res.status === false || !res) {
+          let msg = res.message;
+          errorToast(`error  ${msg}`);
           return;
         } else {
-          setComments((prevComments) => ({
-            ...prevComments,
-            [recipeId]: res.data.comment,
-          }));
+          setRecipes(res.data);
           return;
         }
       }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    return { status: false, message: error.message };
-  }
-};
+  };
+  
+
+  // const getMyRecipe = async () => {
+  //   try {
+  //     console.log("hello")
+  //     const token = getCookie('jwtoken');
+  //     console.log(token,"hh")
+  //   if (token) {
+  //     //decode the JWT
+  //     const decoded = jwt_decode(token);
+
+  //     //get the user ID from the decoded JWT
+  //     const userId = decoded.userId;
+  //     const response = await fetch(`http://localhost:4500/getRecipeByUser/${userId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         cookies : token,
+  //       },
+  //     });
+  //     const res = await response.json();
+      
+  //     if (res.status === false || !res) {
+  //       let msg = res.message;
+  //       errorToast(`error  ${msg}`);
+  //       return;
+  //     } else {
+  //       setRecipes(res.data);
+  //       return;
+  //     }
+  //   }
+  // } catch (error) {
+  //     throw error
+  // }
+  // };
+  
+  const getComments = async (recipeId) => {
+    try {
+      const token = localStorage.getItem('token')
+
+      if (token) {
+        const response = await axios.get(`http://localhost:4500/getComment/${recipeId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization" : "jwtoken=" + token,
+          },
+        });
+        const res = response.data;
+        if (res.status === false || !res) {
+          let msg = res.message;
+          errorToast(`user ${msg}`);
+          return;
+        } else {
+          if (res.data === undefined) {
+            setComments((prevComments) => ({
+              ...prevComments,
+              [recipeId]: [],
+            }));
+            return;
+          } else {
+            setComments((prevComments) => ({
+              ...prevComments,
+              [recipeId]: res.data.comment,
+            }));
+            return;
+          }
+        }
+      }
+    } catch (error) {
+      return { status: false, message: error.message };
+    }
+  };
+  
+
+// const getComments = async (recipeId) => {
+//   try {
+    
+//     const token = getCookie('jwtoken');
+//     if (token) {
+//       const response = await fetch(`http://localhost:4500/getComment/${recipeId}`, {
+//         method: 'GET',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           "Cookie": token,
+//         },
+//       });
+//       const res = await response.json();
+//       if (res.status === false || !res) {
+//         let msg = res.message;
+//         errorToast(`user ${msg}`);
+//         return;
+//       } else {
+//         if (res.data === undefined) {
+//           setComments((prevComments) => ({
+//             ...prevComments,
+//             [recipeId]: [],
+//           }));
+//           return;
+//         } else {
+//           setComments((prevComments) => ({
+//             ...prevComments,
+//             [recipeId]: res.data.comment,
+//           }));
+//           return;
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     return { status: false, message: error.message };
+//   }
+// };
 
 
 

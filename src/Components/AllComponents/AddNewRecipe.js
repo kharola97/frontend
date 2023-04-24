@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { isValidRating,isValidInput} from "../../Validations/Validations"
-
+import axios from 'axios';
 
 
 const errorToast = (message) => {
@@ -50,68 +50,132 @@ function Recipe() {
         value=e.target.value
         setRecipe({...recipe,[name]:value})
     }
+    
 
-    const postData = async  ()=>{
+    const postData = async () => {
       try {
-        console.log(recipe,"recipe")
-          const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
+        console.log(recipe, "recipe");
+        const { dishname, description, ingredients, instructions, rating, cookingtime } = recipe;
+    
+        if (!dishname || !isValidInput(dishname)) {
+          errorToast(`Please enter the dish name`);
+          return;
+        }
+        if (!description || !isValidInput(description)) {
+          errorToast("Please add description of your dish");
+          return;
+        }
+        if (!ingredients || !isValidInput(ingredients)) {
+          errorToast("Please add ingredients of your dish");
+          return;
+        }
+        if (!instructions || !isValidInput(instructions)) {
+          errorToast("Please add instructions avout how to prepare your dish");
+          return;
+        }
+        if (!rating || !isValidRating(rating.trim())) {
+          errorToast("Rating can only be between 1-5");
+          return;
+        }
+        const token = localStorage.getItem('token')
 
-          if(!dishname || !isValidInput(dishname)){
-            errorToast(`Please enter the dish name`)
+        if (token) {
+          //decode the JWT
+          const decoded = jwt_decode(token);
+    
+          //get the user ID from the decoded JWT
+          const userId = decoded.userId;
+    
+          const config = {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'jwtoken=' + token
+            }
+          };
+    
+          const data = { dishname, description, ingredients, instructions, rating, cookingtime, isPublic };
+          const response = await axios.post(`http://localhost:4500/recipe/${userId}`, data, config);
+    
+          const res = response.data;
+          console.log(res.data);
+          if (res.status === false || !res) {
+            let msg = res.message;
+            errorToast(`submission failed beacsue ${msg}`);
             return;
           }
-          if(!description || !isValidInput(description)){
-            errorToast("Please add description of your dish")
-            return;
+          else {
+            successToast("Recipe has been added");
+            navigate("/");
           }
-          if(!ingredients || !isValidInput(ingredients)){
-            errorToast("Please add ingredients of your dish")
-            return;
-          }
-          if(!instructions || !isValidInput(instructions)){
-            errorToast("Please add instructions avout how to prepare your dish")
-            return;
-          }
-          if(!rating || !isValidRating(rating.trim())){
-            errorToast("Rating can only be between 1-5")
-            return;
-          }
-          const token = getCookie('jwtoken');
-          if(token){
+        }
+      } catch (error) {
+        throw error;
+      }
+    };
+    
+
+
+  //   const postData = async  ()=>{
+  //     try {
+  //       console.log(recipe,"recipe")
+  //         const {dishname,description,ingredients,instructions,rating,cookingtime} = recipe
+
+  //         if(!dishname || !isValidInput(dishname)){
+  //           errorToast(`Please enter the dish name`)
+  //           return;
+  //         }
+  //         if(!description || !isValidInput(description)){
+  //           errorToast("Please add description of your dish")
+  //           return;
+  //         }
+  //         if(!ingredients || !isValidInput(ingredients)){
+  //           errorToast("Please add ingredients of your dish")
+  //           return;
+  //         }
+  //         if(!instructions || !isValidInput(instructions)){
+  //           errorToast("Please add instructions avout how to prepare your dish")
+  //           return;
+  //         }
+  //         if(!rating || !isValidRating(rating.trim())){
+  //           errorToast("Rating can only be between 1-5")
+  //           return;
+  //         }
+  //         const token = getCookie('jwtoken');
+  //         if(token){
           
-              //decode the JWT
-            const decoded = jwt_decode(token);
+  //             //decode the JWT
+  //           const decoded = jwt_decode(token);
 
-                //get the user ID from the decoded JWT
-                  const userId = decoded.userId
+  //               //get the user ID from the decoded JWT
+  //                 const userId = decoded.userId
                
-          const response = await fetch(`https://rapp-t5nt.onrender.com/recipe/${userId}`, {
-            method:"POSt",
-            headers:{
-                "Content-Type" : "application/json",
+  //         const response = await fetch(`http://localhost:4500/recipe/${userId}`, {
+  //           method:"POSt",
+  //           headers:{
+  //               "Content-Type" : "application/json",
 
-                'cookie': 'Token ' + token
-            },
-            body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime,isPublic})
-          })
+  //               "Cookie": token
+  //           },
+  //           body : JSON.stringify({dishname,description,ingredients,instructions,rating,cookingtime,isPublic})
+  //         })
         
 
-          const res = await response.json()
-          console.log(res.data)
-          if(res.status===false || !res){
-            let msg = res.message
-            errorToast(`submission failed beacsue ${msg}`)
-            return;
-          }
-          else{
-            successToast("Recipe has been added")
-                   navigate("/")
-          }
-    }
-  } catch (error) {
-        throw error
-  }
-  }
+  //         const res = await response.json()
+  //         console.log(res.data)
+  //         if(res.status===false || !res){
+  //           let msg = res.message
+  //           errorToast(`submission failed beacsue ${msg}`)
+  //           return;
+  //         }
+  //         else{
+  //           successToast("Recipe has been added")
+  //                  navigate("/")
+  //         }
+  //   }
+  // } catch (error) {
+  //       throw error
+  // }
+  // }
   return (
     <>
     <div className='Recipe-div'>

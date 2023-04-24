@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../AllCss/Profile.css"
 import {isValidateEmail,passwordVal,isValidName,isValidNo,} from "../../Validations/Validations"
+import axios from 'axios';
+
+
 
 const errorToast = (message) => {
   toast.error(message, {
@@ -41,41 +44,67 @@ function Profile() {
         setUser({...user,[name]:value})
     }
 
-const getUserDetails = async()=>{
-    try {
-      
-   
-    const token = getCookie('jwtoken');
-    if(token){
-          
-      //decode the JWT
-    const decoded = jwt_decode(token);
+    const getUserDetails = async () => {
+      try {
+        const token = localStorage.getItem('token')
 
-        //get the user ID from the decoded JWT
-    const userId = decoded.userId
-     const response = await fetch(`https://rapp-t5nt.onrender.com/getuserdetails/${userId}`,{
-      method:"GET",
-      headers:{
-        "Content-Type" : "application/json",
-
-        'cookie': 'Token ' + token
+        if (token) {
+          const decoded = jwt_decode(token);
+          const userId = decoded.userId;
+          const response = await axios.get(`http://localhost:4500/getuserdetails/${userId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization" : "jwtoken=" + token
+            }
+          });
+          const res = response.data;
+          if (res.status === false || !res) {
+            let msg = res.message;
+            errorToast(`user not found ${msg}`);
+            return;
+          } else {
+            setUser(res.data);
+            return;
+          }
+        }
+      } catch (error) {
+        throw error;
       }
-     })
-     const res = await response.json()
-     if (res.status === false || !res) {
-      let msg = res.message;
-      errorToast(`user not found ${msg}`);
-      return;
-    } else {
-      
-      setUser(res.data);
-      return;
     }
-  }
-} catch (error) {
-      throw error
-}
-}
+    
+// const getUserDetails = async()=>{
+//     try {
+//       const token = getCookie('jwtoken');
+//     if(token){
+          
+//       //decode the JWT
+//     const decoded = jwt_decode(token);
+
+//         //get the user ID from the decoded JWT
+//     const userId = decoded.userId
+//      const response = await fetch(`http://localhost:4500/getuserdetails/${userId}`,{
+//       method:"GET",
+//       headers:{
+//         "Content-Type" : "application/json",
+
+//         "Cookie" : token
+//       }
+//      })
+//      const res = await response.json()
+//      if (res.status === false || !res) {
+//       let msg = res.message;
+//       errorToast(`user not found ${msg}`);
+//       return;
+//     } else {
+      
+//       setUser(res.data);
+//       return;
+//     }
+//   }
+// } catch (error) {
+//       throw error
+// }
+// }
 //for initially rendering the user details on page using useEffect
 useEffect(() => {
   getUserDetails();
@@ -86,70 +115,130 @@ useEffect(() => {
     setEditing(true);
   }
 
-  const handleSaveClick = async() => {
-    try {
-      
-   
-   
-    const {Fullname,email,number,password} = user;
-    if(Fullname){
-      if(!isValidName(Fullname)){
-        errorToast("Name should only contain alphabets")
-        return
-      }
-    }
-    if(email){
-      if(!isValidateEmail(email)){
-        errorToast("Incorrect email correct email format- username@domainname.com")
-        return
-      }
-    }
+  // const handleSaveClick = async(e) => {
+  //   try {
+  //     e.preventDefault()
+  //  const {Fullname,email,number,password} = user;
+  //   if(Fullname){
+  //     if(!isValidName(Fullname)){
+  //       errorToast("Name should only contain alphabets")
+  //       return
+  //     }
+  //   }
+  //   if(email){
+  //     if(!isValidateEmail(email)){
+  //       errorToast("Incorrect email correct email format- username@domainname.com")
+  //       return
+  //     }
+  //   }
 
-    if(number){
-      if(!isValidNo(number)){
-        errorToast("Incorrect phone number")
-        return
-      }
-    }
-    if(password){
-      if(!passwordVal(password)){
-        errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12")
-        return
-      }
-    }
-    const token = getCookie('jwtoken');
-    if(token){
-      //decode the token
-      const decoded = jwt_decode(token)
-      const userId = decoded.userId
-      const response = await fetch(`https://rapp-t5nt.onrender.com/updateUserDetails/${userId}`,{
-        method:"PUT",
-        headers:{
-          "Content-Type" : "application/json",
+  //   if(number){
+  //     if(!isValidNo(number)){
+  //       errorToast("Incorrect phone number")
+  //       return
+  //     }
+  //   }
+  //   if(password){
+  //     if(!passwordVal(password)){
+  //       errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12")
+  //       return
+  //     }
+  //   }
+  //   const token = getCookie('jwtoken');
+  //   if(token){
+  //     //decode the token
+  //     const decoded = jwt_decode(token)
+  //     const userId = decoded.userId
+  //     const response = await fetch(`http://localhost:4500/updateUserDetails/${userId}`,{
+  //       method:"PUT",
+  //       headers:{
+  //         "Content-Type" : "application/json",
 
-          'cookie'       : 'Token ' + token
-        },
-        body : JSON.stringify({
-          Fullname,email,number,password
-        })
-      })
-      const res = await response.json()
-      if (res.status === false || !res) {
-        let msg = res.message;
-        errorToast(`user not found ${msg}`);
-        return;
-      } else {
+  //         Cookie : token
+  //       },
+  //       body : JSON.stringify({
+  //         Fullname,email,number,password
+  //       })
+  //     })
+  //     const res = await response.json()
+  //     if (res.status === false || !res) {
+  //       let msg = res.message;
+  //       errorToast(`user not found ${msg}`);
+  //       return;
+  //     } else {
         
-        setUser(res.data);
-        successToast("Details have been updated")
-        setEditing(false);
-        return;
+  //       setUser(res.data);
+  //       successToast("Details have been updated")
+  //       setEditing(false);
+  //       return;
+  //     }
+  //   }
+  // } catch (error) {
+  //     throw error
+  // }
+  // }
+  const handleSaveClick = async(e) => {
+    try {
+      e.preventDefault();
+      const { Fullname, email, number, password } = user;
+      if(Fullname){
+        if(!isValidName(Fullname)){
+          errorToast("Name should only contain alphabets")
+          return;
+        }
       }
+      if(email){
+        if(!isValidateEmail(email)){
+          errorToast("Incorrect email correct email format- username@domainname.com")
+          return;
+        }
+      }
+      if(number){
+        if(!isValidNo(number)){
+          errorToast("Incorrect phone number")
+          return;
+        }
+      }
+      if(password){
+        if(!passwordVal(password)){
+          errorToast("at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric characterat least one special character, range between 8-12")
+          return;
+        }
+      }
+      const token = localStorage.getItem('token')
+
+      if(token){
+        //decode the token
+        const decoded = jwt_decode(token)
+        const userId = decoded.userId
+        const response = await axios.put(`http://localhost:4500/updateUserDetails/${userId}`, {
+          Fullname,
+          email,
+          number,
+          password,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization" : "jwtoken=" + token,
+          },
+        });
+        const res = response.data;
+        if (res.status === false || !res) {
+          let msg = res.message;
+          errorToast(`user not found ${msg}`);
+          return;
+        } else {
+          setUser(res.data);
+          successToast("Details have been updated")
+          setEditing(false);
+          return;
+        }
+      }
+    } catch (error) {
+        throw error
     }
-  } catch (error) {
-      throw error
-  }
-  }
+  };
+  
 
   const handleCancelClick = () => {
     setEditing(false);

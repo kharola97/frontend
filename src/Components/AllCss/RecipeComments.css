@@ -31,6 +31,7 @@
     flex: 1;
     padding: 0 20px;
     margin-left: 20px;
+    margin-top: 10px;
   }
   
   h2{
@@ -71,10 +72,10 @@
     background-color: red;
    height: 40px;
    width: 60px;
-   line-height: 40px;
+   line-height: 10px;
    float: right;
    padding: 0px;
-   margin-top: 0px;
+   margin-top: -50px;
   }
   .delete:hover {
     background-color: rgb(230, 116, 116);

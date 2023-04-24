@@ -23,7 +23,8 @@ function Navbar(props) {
 
   function handleLogout() {
     props.setLoggedIn(false);
-    Cookies.remove('jwtoken');
+    localStorage.removeItem('token');
+
     successToast("You have been logged Out ")
     navigate('/SignUp')
   }
